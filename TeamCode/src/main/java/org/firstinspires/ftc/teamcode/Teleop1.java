@@ -17,7 +17,7 @@ public class Teleop1 extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-\
+
 
             //Hardware Maps
             leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -28,6 +28,9 @@ public class Teleop1 extends LinearOpMode {
             double drivePower = -gamepad1.left_stick_y;
             double turnPower = gamepad1.right_stick_x;
             double strafePower = gamepad1.left_stick_x;
+
+            rightFront.setDirection(DcMotor.Direction.REVERSE);
+            rightBack.setDirection(DcMotor.Direction.REVERSE);
 
             double lfPower = Range.clip(drivePower + turnPower + strafePower, -driveSensitivity, driveSensitivity);
             double rfPower = Range.clip(drivePower - turnPower - strafePower, -driveSensitivity, driveSensitivity);
