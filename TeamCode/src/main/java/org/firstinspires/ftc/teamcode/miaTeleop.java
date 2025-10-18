@@ -11,7 +11,7 @@ public class miaTeleop {
         public class MiasTeleop1 extends LinearOpMode {
             //Motor Variables
             private DcMotor leftFront, leftBack, rightFront, rightBack;
-            private DcMotor rotateMotor, propelMotor;
+            private DcMotor propelLeft, propelRight;
             private Servo servo1, servo2;
 
             private double driveSensitivity = 1;
@@ -36,6 +36,9 @@ public class miaTeleop {
                 double lbPower = Range.clip(drivePower + turnPower - strafePower, -driveSensitivity, driveSensitivity);
                 double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
+                rightFront.setDirection(DcMotor.Direction.REVERSE);
+                rightBack.setDirection(DcMotor.Direction.REVERSE);
+
                 // Send calculated power to wheels
                 leftFront.setPower(lfPower);
                 leftBack.setPower(lbPower);
@@ -46,27 +49,22 @@ public class miaTeleop {
                 //use of hardware map function to make a variable so we can manipulate for each motor and servo
                 servo1 = hardwareMap.get(Servo.class, "servo1");
                 servo2 = hardwareMap.get(Servo.class, "servo2");
-                propelMotor = hardwareMap.get(DcMotor.class, "shooter1");
-                rotateMotor = hardwareMap.get(DcMotor.class, "shooter2");
+                propelLeft = hardwareMap.get(DcMotor.class, "shooter1");
+                propelRight = hardwareMap.get(DcMotor.class, "shooter2");
 
+                propelRight.setDirection(DcMotor.Direction.REVERSE);
 
                 waitForStart();
                 //response to buttons/human input
                 if (gamepad1.a)
                 {
-                    rotateMotor.setPower(1);
-                }
-                if (gamepad1.b)
-                {
-                    propelMotor.setPower(1);
+                    propelLeft.setPower(1);
+                    propelRight.setPower(1);
                 }
                 if (gamepad1.left_trigger == 1.0)
                 {
                     servo1.setPosition(0.5);
-                }
-                if (gamepad1.right_trigger == 1.0)
-                {
-                    servo2.setPosition(0.1);
+                    servo2.setPosition(0.5);
                 }
 
                 //assign power when button is pressed
