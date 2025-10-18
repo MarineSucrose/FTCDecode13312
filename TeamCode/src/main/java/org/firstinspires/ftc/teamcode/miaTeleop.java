@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-public class miaTeleop {
-        @TeleOp(name="MiasTeleop1", group="Linear OpMode")
-        public class MiasTeleop1 extends LinearOpMode {
+public class miaTeleop extends LinearOpMode {
             //Motor Variables
             private DcMotor leftFront, leftBack, rightFront, rightBack;
             private DcMotor propelLeft, propelRight;
@@ -71,7 +69,7 @@ public class miaTeleop {
 
 
             }
-        }
+
 
 
     }
