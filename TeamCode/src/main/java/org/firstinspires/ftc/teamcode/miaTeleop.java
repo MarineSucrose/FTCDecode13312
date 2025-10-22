@@ -7,9 +7,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 public class miaTeleop extends LinearOpMode {
+
+    //Programming
+    //revise code regarding hardware to reflect changes in bot (eliminate 2nd shooter motor, switch servos to axon servos, etc)
+    //Finish configuration for shooter after revising code
+    //brief drive team on controls and procedures so they can practice
+    //finish auto 1
             //Motor Variables
             private DcMotor leftFront, leftBack, rightFront, rightBack;
-            private DcMotor propelLeft, propelRight;
+            private DcMotor shooterMotor;
             private Servo servo1, servo2;
 
             private double driveSensitivity = 1;
@@ -47,20 +53,20 @@ public class miaTeleop extends LinearOpMode {
                 //use of hardware map function to make a variable so we can manipulate for each motor and servo
                 servo1 = hardwareMap.get(Servo.class, "servo1");
                 servo2 = hardwareMap.get(Servo.class, "servo2");
-                propelLeft = hardwareMap.get(DcMotor.class, "shooter1");
-                propelRight = hardwareMap.get(DcMotor.class, "shooter2");
+                shooterMotor = hardwareMap.get(DcMotor.class, "shooter1");
 
-                propelRight.setDirection(DcMotor.Direction.REVERSE);
 
                 waitForStart();
                 //response to buttons/human input
                 if (gamepad1.a)
                 {
-                    propelLeft.setPower(1);
-                    propelRight.setPower(1);
+                    //1 is full power
+                    shooterMotor.setPower(0.4);
+
                 }
                 if (gamepad1.left_trigger == 1.0)
                 {
+                    // 0 is 0 degrees, 0.5 is 90, 1 is 180
                     servo1.setPosition(0.5);
                     servo2.setPosition(0.5);
                 }
