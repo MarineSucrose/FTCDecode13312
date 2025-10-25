@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.Range;
 
 public class miaTeleop extends LinearOpMode {
@@ -16,7 +17,7 @@ public class miaTeleop extends LinearOpMode {
             //Motor Variables
             private DcMotor leftFront, leftBack, rightFront, rightBack;
             private DcMotor shooterMotor;
-            private Servo servo1, servo2;
+            private CRServo servo1, servo2;
 
             private double driveSensitivity = 1;
 
@@ -51,8 +52,8 @@ public class miaTeleop extends LinearOpMode {
 
 
                 //use of hardware map function to make a variable so we can manipulate for each motor and servo
-                servo1 = hardwareMap.get(Servo.class, "servo1");
-                servo2 = hardwareMap.get(Servo.class, "servo2");
+                servo1 = hardwareMap.get(CRServo.class, "servo1");
+                servo2 = hardwareMap.get(CRServo.class, "servo2");
                 shooterMotor = hardwareMap.get(DcMotor.class, "shooter1");
 
 
@@ -64,11 +65,11 @@ public class miaTeleop extends LinearOpMode {
                     shooterMotor.setPower(0.4);
 
                 }
-                if (gamepad1.left_trigger == 1.0)
+                if (gamepad1.left_trigger >= 0.5)
                 {
-                    // 0 is 0 degrees, 0.5 is 90, 1 is 180
-                    servo1.setPosition(0.5);
-                    servo2.setPosition(0.5);
+
+                    servo1.setPower(-0.3);
+                    servo2.setPower(0.3);
                 }
 
                 //assign power when button is pressed
