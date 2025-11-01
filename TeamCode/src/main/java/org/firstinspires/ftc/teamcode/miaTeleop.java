@@ -57,7 +57,7 @@ import com.qualcomm.robotcore.util.Range;
                     }
                     if (gamepad1.left_trigger <= 0.5) {
                         servo1.setPower(0.5);
-                        servo2.setPower(0.5);
+                        servo2.setPower(-0.5);
                     }
 
                     //assign power when button is pressed
