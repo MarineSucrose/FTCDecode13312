@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.Range;
             private DcMotor leftFront, leftBack, rightFront, rightBack;
             private DcMotor shooterPropel;
             private CRServo servo1, servo2;
-
             private double driveSensitivity = 1;
 
             @Override
@@ -55,10 +54,18 @@ import com.qualcomm.robotcore.util.Range;
                     if (gamepad1.a) {
                         shooterPropel.setPower(0.4);
                     }
-                    if (gamepad1.left_trigger <= 0.5) {
+                    if (gamepad1.b) {
+                        shooterPropel.setPower(0);
+                    }
+                    if (gamepad1.left_bumper) {
                         servo1.setPower(0.5);
+                        servo2.setPower(-0.5);
+                    }
+                    if (gamepad1.right_bumper) {
+                        servo1.setPower(-0.5);
                         servo2.setPower(0.5);
                     }
+
 
                     //assign power when button is pressed
 
