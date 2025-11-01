@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
             private DcMotor leftFront, leftBack, rightFront, rightBack;
             private DcMotor shooterPropel;
             private CRServo servo1, servo2;
+
             private double driveSensitivity = 1;
 
             @Override
@@ -65,7 +66,6 @@ import com.qualcomm.robotcore.util.Range;
                         servo1.setPower(-0.5);
                         servo2.setPower(0.5);
                     }
-
 
                     //assign power when button is pressed
 
