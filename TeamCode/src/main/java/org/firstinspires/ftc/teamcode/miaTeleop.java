@@ -53,18 +53,18 @@ import com.qualcomm.robotcore.util.Range;
 
                     //response to buttons/human input
                     if (gamepad1.a) {
-                        shooterPropel.setPower(0.4);
+                        shooterPropel.setPower(0.9);
                     }
                     if (gamepad1.b) {
                         shooterPropel.setPower(0);
                     }
-                    if (gamepad1.left_bumper) {
-                        servo1.setPower(0.5);
-                        servo2.setPower(-0.5);
+                    while (gamepad1.left_bumper) {
+                        servo1.setPower(0.2);
+                        servo2.setPower(-0.2);
                     }
-                    if (gamepad1.right_bumper) {
-                        servo1.setPower(-0.5);
-                        servo2.setPower(0.5);
+                    while (gamepad1.right_bumper) {
+                        servo1.setPower(-0.2);
+                        servo2.setPower(0.2);
                     }
 
                     //assign power when button is pressed
