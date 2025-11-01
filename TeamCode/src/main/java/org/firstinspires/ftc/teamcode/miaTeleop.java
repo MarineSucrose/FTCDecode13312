@@ -74,7 +74,7 @@ public class miaTeleop extends LinearOpMode {
 
                 //assign power when button is pressed
 
-
+//bruh
             }
 
 
