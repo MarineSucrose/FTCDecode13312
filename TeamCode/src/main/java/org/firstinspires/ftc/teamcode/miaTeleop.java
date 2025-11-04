@@ -11,9 +11,12 @@ import com.qualcomm.robotcore.util.Range;
             //Motor Variables
             private DcMotor leftFront, leftBack, rightFront, rightBack;
             private DcMotor shooterPropel;
+            private DcMotor intakeMotor;
             private CRServo servo1, servo2;
 
             private double driveSensitivity = 1;
+
+            private boolean stateVar;
 
             @Override
             public void runOpMode() throws InterruptedException {
@@ -50,6 +53,8 @@ import com.qualcomm.robotcore.util.Range;
                     servo1 = hardwareMap.get(CRServo.class, "servo1");
                     servo2 = hardwareMap.get(CRServo.class, "servo2");
                     shooterPropel = hardwareMap.get(DcMotor.class, "shooterPropel");
+                    intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+
 
                     //response to buttons/human input
                     if (gamepad1.a) {
@@ -68,7 +73,25 @@ import com.qualcomm.robotcore.util.Range;
                     }
 
                     //assign power when button is pressed
+                    //if a signal that there is a ball is sent to the driver station, turn on the motor
+                    while (gamepad1.x){
+                        intakeMotor.setPower(0.5);
+                    }
 
+                    if (gamepad1.a) {
+                        stateVar = true;
+                    }
+                    while (stateVar = true)
+                    {
+
+                    }
+                    if (gamepad1.b){
+                        stateVar = false;
+                    }
+                    while (stateVar = false)
+                    {
+
+                    }
                 }
             }
         }
