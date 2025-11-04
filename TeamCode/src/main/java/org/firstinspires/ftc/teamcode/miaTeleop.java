@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
             private DcMotor shooterPropel;
             private DcMotor intakeMotor;
             private CRServo servo1, servo2;
+            private Servo servo3;
 
             private double driveSensitivity = 1;
 
@@ -54,7 +55,7 @@ import com.qualcomm.robotcore.util.Range;
                     servo2 = hardwareMap.get(CRServo.class, "servo2");
                     shooterPropel = hardwareMap.get(DcMotor.class, "shooterPropel");
                     intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-
+                    servo3 = hardwareMap.get(Servo.class, "servo3");
 
                     //response to buttons/human input
 
@@ -66,18 +67,22 @@ import com.qualcomm.robotcore.util.Range;
                         servo1.setPower(-0.2);
                         servo2.setPower(0.2);
                     }
-                    while (gamepad1.x){
+                    while (gamepad1.x) {
                         intakeMotor.setPower(0.5);
                     }
-
-
                     if(gamepad1.a){
                         stateVar = !stateVar;
                     }
                     while(stateVar){
                         shooterPropel.setPower(0.9);
                     }
-
+                    //button is pressed and servo3 rotates to a certain position
+                    while(gamepad1.y){
+                        servo3.setPosition(0.6);
+                    }
+                    while(gamepad1.b){
+                        servo3.setPosition(0);
+                    }
                 }
             }
         }
