@@ -88,7 +88,6 @@ public class teleop2 extends LinearOpMode {
             intakeMotor.setPower(gamepad1.right_stick_y);
 
 
-
             //kicker
 
             while(gamepad2.x){
