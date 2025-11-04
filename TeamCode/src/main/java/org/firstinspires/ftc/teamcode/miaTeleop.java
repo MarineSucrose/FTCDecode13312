@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
             private double driveSensitivity = 1;
 
-            private boolean stateVar;
+            private boolean stateVar = false;
 
             @Override
             public void runOpMode() throws InterruptedException {
@@ -66,27 +66,18 @@ import com.qualcomm.robotcore.util.Range;
                         servo1.setPower(-0.2);
                         servo2.setPower(0.2);
                     }
-
-                    //assign power when button is pressed
-                    //if a signal that there is a ball is sent to the driver station, turn on the motor
                     while (gamepad1.x){
                         intakeMotor.setPower(0.5);
                     }
 
-                    if (gamepad1.a) {
-                        stateVar = true;
-                    }
-                    while (stateVar = true)
-                    {
 
+                    if(gamepad1.a){
+                        stateVar = !stateVar;
                     }
-                    if (gamepad1.b){
-                        stateVar = false;
+                    while(stateVar){
+                        shooterPropel.setPower(0.9);
                     }
-                    while (stateVar = false)
-                    {
 
-                    }
                 }
             }
         }
