@@ -85,7 +85,7 @@ public class teleop2 extends LinearOpMode {
 
             // Intake
 
-            intakeMotor.setPower(gamepad1.right_stick_y);
+            intakeMotor.setPower(gamepad2.right_stick_y);
 
 
             //kicker
