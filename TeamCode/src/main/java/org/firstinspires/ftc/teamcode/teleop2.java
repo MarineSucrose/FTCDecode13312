@@ -73,7 +73,7 @@ public class teleop2 extends LinearOpMode {
 
             //Shooter
 
-            if(gamepad1.a){
+            if(gamepad2.a){
                 stateVar = !stateVar;
             }
 
