@@ -77,10 +77,10 @@ import com.qualcomm.robotcore.util.Range;
                         shooterPropel.setPower(0.9);
                     }
                     //button is pressed and servo3 rotates to a certain position
-                    while(gamepad1.y){
-                        servo3.setPosition(0.6);
+                    if (gamepad1.y){
+                        servo3.setPosition(0.67);
                     }
-                    while(gamepad1.b){
+                    else{
                         servo3.setPosition(0);
                     }
                 }
