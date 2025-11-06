@@ -41,7 +41,7 @@ public class teleop2 extends LinearOpMode {
             double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
             rightFront.setDirection(DcMotor.Direction.REVERSE);
-            leftBack.setDirection(DcMotor.Direction.REVERSE);
+            rightBack.setDirection(DcMotor.Direction.REVERSE);
 
             // Send calculated power to wheels
             leftFront.setPower(lfPower);
@@ -87,7 +87,7 @@ public class teleop2 extends LinearOpMode {
 
             // Intake
 
-            intakeMotor.setPower(gamepad2.right_stick_y);
+            intakeMotor.setPower(-1 * gamepad2.right_stick_y);
 
 
             //kicker
