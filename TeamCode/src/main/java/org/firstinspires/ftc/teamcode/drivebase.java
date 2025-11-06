@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="Teleop1", group="Linear OpMode")
-public class Teleop1 extends LinearOpMode {
+@TeleOp(name="driveBase", group="Linear OpMode")
+public class drivebase extends LinearOpMode {
 
     //Motor Variables
     private DcMotor leftFront, leftBack, rightFront, rightBack;
