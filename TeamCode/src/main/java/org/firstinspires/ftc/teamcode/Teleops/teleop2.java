@@ -92,7 +92,7 @@ public class teleop2 extends LinearOpMode {
             //kicker
 
             while(gamepad2.x){
-                kicker.setPosition(0.5);
+                kicker.setPosition(0.75);
             }
             while(gamepad2.b){
                 kicker.setPosition(0);
