@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Teleops;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -70,7 +70,7 @@ public class teleop2 extends LinearOpMode {
 
 
 
-            //Shooter
+            //Shooter (toggle)
 
             if(gamepad2.a){
                 stateVar = !stateVar;
@@ -78,8 +78,7 @@ public class teleop2 extends LinearOpMode {
 
             if(stateVar){
                 shooterPropel.setPower(0.9);
-            }
-            if (!stateVar) {
+            } else {
                 shooterPropel.setPower(0.0);
             }
 
