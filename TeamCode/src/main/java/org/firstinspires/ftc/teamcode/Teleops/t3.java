@@ -13,7 +13,7 @@ public class t3 extends LinearOpMode {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
     private DcMotor intakeMotor;
-    private Servo kicker, pivot;
+    private Servo pivot;
 
     private double driveSensitivity = 1;
 
@@ -40,8 +40,8 @@ public class t3 extends LinearOpMode {
             double lbPower = Range.clip(drivePower + turnPower - strafePower, -driveSensitivity, driveSensitivity);
             double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
-            rightFront.setDirection(DcMotor.Direction.REVERSE);
-            rightBack.setDirection(DcMotor.Direction.REVERSE);
+            leftFront.setDirection(DcMotor.Direction.REVERSE);
+            leftBack.setDirection(DcMotor.Direction.REVERSE);
             shooter2.setDirection(DcMotor.Direction.REVERSE);
 
             // Send calculated power to wheels
@@ -56,7 +56,6 @@ public class t3 extends LinearOpMode {
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
             shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
             intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-            kicker = hardwareMap.get(Servo.class, "kicker");
 
 
 
@@ -79,8 +78,8 @@ public class t3 extends LinearOpMode {
             }
 
             if(shootToggle){
-                shooter1.setPower(0.9);
-                shooter2.setPower(0.9);
+                shooter1.setPower(0.8);
+                shooter2.setPower(0.8);
             } else {
                 shooter1.setPower(0.0);
                 shooter2.setPower(0.0);
@@ -91,15 +90,6 @@ public class t3 extends LinearOpMode {
             // Intake
 
             intakeMotor.setPower(-1 * gamepad2.right_stick_y);
-
-
-            //kicker
-
-            if(gamepad2.x){
-               kicker.setPosition(0.75);
-            } else {
-                kicker.setPosition(0);
-            }
 
             }
         }
