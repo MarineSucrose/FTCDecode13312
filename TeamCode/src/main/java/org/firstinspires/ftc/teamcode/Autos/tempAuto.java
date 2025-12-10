@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="tempAuto", group="Linear OpMode")
-public class goofyAhhAuto extends LinearOpMode {
+public class tempAuto extends LinearOpMode {
 
     //Motor Variables
     private DcMotor leftFront, leftBack, rightFront, rightBack;
@@ -33,14 +33,6 @@ public class goofyAhhAuto extends LinearOpMode {
             rightFront.setPower(1);
             rightBack.setPower(1);
 
-            Thread.sleep(300);
-
-
-                leftFront.setPower(0);
-                leftBack.setPower(0);
-                rightFront.setPower(0);
-                rightBack.setPower(0);
-
-            }
-            }
         }
+    }
+}

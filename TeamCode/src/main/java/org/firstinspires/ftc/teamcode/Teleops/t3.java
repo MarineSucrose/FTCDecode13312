@@ -3,7 +3,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,7 +15,6 @@ public class t3 extends LinearOpMode {
     private Servo pivot;
 
     private double driveSensitivity = 1;
-
     private boolean shootToggle = false;
 
     @Override
@@ -30,6 +28,14 @@ public class t3 extends LinearOpMode {
             rightFront = hardwareMap.get(DcMotor.class, "rightFront");
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
+            pivot = hardwareMap.get(Servo.class, "pivot");
+            shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
+            shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
+            intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+
+            rightFront.setDirection(DcMotor.Direction.REVERSE);
+            rightBack.setDirection(DcMotor.Direction.REVERSE);
+            shooter2.setDirection(DcMotor.Direction.REVERSE);
 
             double drivePower = -gamepad1.left_stick_y;
             double turnPower = gamepad1.right_stick_x;
@@ -40,40 +46,30 @@ public class t3 extends LinearOpMode {
             double lbPower = Range.clip(drivePower + turnPower - strafePower, -driveSensitivity, driveSensitivity);
             double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
-            leftFront.setDirection(DcMotor.Direction.REVERSE);
-            leftBack.setDirection(DcMotor.Direction.REVERSE);
-            shooter2.setDirection(DcMotor.Direction.REVERSE);
-
-            // Send calculated power to wheels
             leftFront.setPower(lfPower);
             leftBack.setPower(lbPower);
             rightFront.setPower(rfPower);
             rightBack.setPower(rbPower);
 
 
-            //use of hardware map function to make a variable so we can manipulate for each motor and servo
-            pivot = hardwareMap.get(Servo.class, "pivot");
-            shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
-            shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
-            intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+            //angle adjusting
 
+            double pivPos = 0;
 
-
-            //response to buttons/human input
-
-           if(gamepad2.dpadUpWasPressed()){
-               pivot.setPosition(1);
-           }
-            if(gamepad2.dpadLeftWasPressed()){
-                pivot.setPosition(0.5);
+            if (gamepad2.a && pivPos <= 0.875){
+                pivPos = pivPos + 0.125;
             }
-            if(gamepad2.dpadDownWasPressed()){
-                pivot.setPosition(0);
+
+            if (gamepad2.b && pivPos >= 0.125){
+                pivPos = pivPos - 0.125;
             }
+
+            pivot.setPosition(pivPos);
+
 
             //Shooter (toggle)
 
-            if(gamepad2.a){
+            if(gamepad2.x){
                 shootToggle = !shootToggle;
             }
 
