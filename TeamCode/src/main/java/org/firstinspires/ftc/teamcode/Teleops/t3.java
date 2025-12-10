@@ -12,10 +12,12 @@ public class t3 extends LinearOpMode {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
     private DcMotor intakeMotor;
-    private Servo pivot;
+    private Servo pivot, blocker;
 
     private double driveSensitivity = 1;
     private boolean shootToggle = false;
+    private boolean blockToggle = false;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,6 +31,7 @@ public class t3 extends LinearOpMode {
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
             pivot = hardwareMap.get(Servo.class, "pivot");
+            blocker = hardwareMap.get(Servo.class, "blocker");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
             shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
             intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -52,7 +55,10 @@ public class t3 extends LinearOpMode {
             rightBack.setPower(rbPower);
 
 
-            //angle adjusting
+
+
+
+            //shooter angle adjusting
 
             double pivPos = 0;
 
@@ -65,6 +71,24 @@ public class t3 extends LinearOpMode {
             }
 
             pivot.setPosition(pivPos);
+
+
+
+
+            //blocker (toggle)
+
+            if(gamepad2.y){
+                blockToggle = !blockToggle;
+            }
+
+            if(blockToggle){
+                blocker.setPosition(0.0);
+            } else {
+                blocker.setPosition(0.5);
+            }
+
+
+
 
 
             //Shooter (toggle)
@@ -80,6 +104,8 @@ public class t3 extends LinearOpMode {
                 shooter1.setPower(0.0);
                 shooter2.setPower(0.0);
             }
+
+
 
 
 
