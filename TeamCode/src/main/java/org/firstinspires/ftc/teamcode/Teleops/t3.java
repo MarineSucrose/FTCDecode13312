@@ -12,12 +12,11 @@ public class t3 extends LinearOpMode {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
     private DcMotor intakeMotor;
-    private Servo pivot, blocker;
+    private Servo blocker;
+    private CRServo pivot;
 
     private double driveSensitivity = 1;
     private boolean shootToggle = false;
-    private boolean blockToggle = false;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,7 +29,7 @@ public class t3 extends LinearOpMode {
             rightFront = hardwareMap.get(DcMotor.class, "rightFront");
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
-            pivot = hardwareMap.get(Servo.class, "pivot");
+            pivot = hardwareMap.get(CRServo.class, "pivot");
             blocker = hardwareMap.get(Servo.class, "blocker");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
             shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
@@ -60,33 +59,17 @@ public class t3 extends LinearOpMode {
 
             //shooter angle adjusting
 
-            double pivPos = 0;
+            pivot.setPower(-gamepad2.left_stick_y / 4);
 
-            if (gamepad2.a && pivPos <= 0.875){
-                pivPos = pivPos + 0.125;
+
+            //blocker
+
+            if(gamepad2.right_bumper){
+                blocker.setPosition(1.0);
             }
-
-            if (gamepad2.b && pivPos >= 0.125){
-                pivPos = pivPos - 0.125;
-            }
-
-            pivot.setPosition(pivPos);
-
-
-
-
-            //blocker (toggle)
-
-            if(gamepad2.y){
-                blockToggle = !blockToggle;
-            }
-
-            if(blockToggle){
+            if(gamepad2.left_bumper){
                 blocker.setPosition(0.0);
-            } else {
-                blocker.setPosition(0.5);
             }
-
 
 
 
@@ -98,8 +81,8 @@ public class t3 extends LinearOpMode {
             }
 
             if(shootToggle){
-                shooter1.setPower(0.8);
-                shooter2.setPower(0.8);
+                shooter1.setPower(0.9);
+                shooter2.setPower(0.9);
             } else {
                 shooter1.setPower(0.0);
                 shooter2.setPower(0.0);
