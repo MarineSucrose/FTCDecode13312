@@ -42,7 +42,7 @@ public class t3 extends LinearOpMode {
             intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
             double drivePower = -gamepad1.left_stick_y;
-            double turnPower = gamepad1.right_stick_x;
+            double turnPower = -gamepad1.right_stick_x;
             double strafePower = gamepad1.left_stick_x;
 
             double lfPower = Range.clip(drivePower + turnPower + strafePower, -driveSensitivity, driveSensitivity);

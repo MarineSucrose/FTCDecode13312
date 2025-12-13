@@ -41,17 +41,17 @@ public class ballMissile extends LinearOpMode {
 
 
             blocker.setPosition(1);
-            shooter1.setPower(1);
-            shooter2.setPower(1);
+            shooter1.setPower(0.9);
+            shooter2.setPower(0.9);
             Thread.sleep(3000);
             blocker.setPosition(0);
             intakeMotor.setPower(-1);
             Thread.sleep(3000);
-            leftFront.setPower(1);
-            rightFront.setPower(1);
-            leftBack.setPower(1);
-            rightBack.setPower(1);
-            Thread.sleep(2000);
+            leftFront.setPower(-1);
+            rightFront.setPower(-1);
+            leftBack.setPower(-1);
+            rightBack.setPower(-1);
+            Thread.sleep(500);
             leftFront.setPower(0);
             rightFront.setPower(0);
             leftBack.setPower(0);
