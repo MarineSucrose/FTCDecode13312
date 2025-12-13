@@ -58,6 +58,8 @@ public class ballMissile extends LinearOpMode {
             rightBack.setPower(0);
             shooter1.setPower(0);
             shooter2.setPower(0);
+            Thread.sleep(60000);
+
 
 
 

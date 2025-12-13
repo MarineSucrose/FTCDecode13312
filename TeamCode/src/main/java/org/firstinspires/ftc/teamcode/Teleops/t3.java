@@ -17,6 +17,7 @@ public class t3 extends LinearOpMode {
     private CRServo pivot;
 
     private double driveSensitivity = 1;
+    private double precision = 1;
     private boolean shootToggle = false;
 
     @Override
@@ -50,10 +51,21 @@ public class t3 extends LinearOpMode {
             double lbPower = Range.clip(drivePower + turnPower - strafePower, -driveSensitivity, driveSensitivity);
             double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
-            leftFront.setPower(lfPower);
-            leftBack.setPower(lbPower);
-            rightFront.setPower(rfPower);
-            rightBack.setPower(rbPower);
+
+            if (gamepad1.right_bumper){
+                precision = 0.25;
+            }
+
+            if (gamepad1.left_bumper){
+                precision = 1
+            }
+
+
+                leftFront.setPower(lfPower * precision);
+                leftBack.setPower(lbPower * precision);
+                rightFront.setPower(rfPower * precision);
+                rightBack.setPower(rbPower * precision);
+
 
 
 
@@ -83,8 +95,8 @@ public class t3 extends LinearOpMode {
             }
 
             if(shootToggle){
-                shooter1.setPower(0.9);
-                shooter2.setPower(0.9);
+                shooter1.setPower(0.75);
+                shooter2.setPower(0.75);
             } else {
                 shooter1.setPower(0.0);
                 shooter2.setPower(0.0);
