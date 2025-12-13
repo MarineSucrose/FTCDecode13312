@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -38,6 +39,7 @@ public class t3 extends LinearOpMode {
             rightFront.setDirection(DcMotor.Direction.REVERSE);
             rightBack.setDirection(DcMotor.Direction.REVERSE);
             shooter2.setDirection(DcMotor.Direction.REVERSE);
+            intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
             double drivePower = -gamepad1.left_stick_y;
             double turnPower = gamepad1.right_stick_x;
