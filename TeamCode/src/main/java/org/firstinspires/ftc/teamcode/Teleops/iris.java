@@ -93,7 +93,7 @@ public class iris extends LinearOpMode {
             //blocker
 
             if(gamepad2.right_bumper){
-                shootBlock.setPosition(1.0);
+                shootBlock.setPosition(0.5);
             }
             if(gamepad2.left_bumper){
                 shootBlock.setPosition(0.0);
