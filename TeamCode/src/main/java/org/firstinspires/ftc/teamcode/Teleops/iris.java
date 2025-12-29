@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -12,12 +13,12 @@ public class iris extends LinearOpMode {
     //Motor Variables
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
-    private CRServo intake;
-    private Servo blocker;
+    private DcMotor intakeMotor;
+    private Servo intakeBlock;
+    private Servo shootBlock;
     private Servo pivot;
 
     private double driveSensitivity = 1;
-    private boolean shootToggle = false;
     private double precision = 1;
     private double strength = 0;
 
@@ -32,15 +33,18 @@ public class iris extends LinearOpMode {
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
             pivot = hardwareMap.get(Servo.class, "pivot");
-            blocker = hardwareMap.get(Servo.class, "blocker");
+            shootBlock = hardwareMap.get(Servo.class, "blocker");
+            intakeBlock = hardwareMap.get(Servo.class, "intakeBlock");
+
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
             shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
-            intake = hardwareMap.get(CRServo.class, "intake");
+            intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+
 
             rightFront.setDirection(DcMotor.Direction.REVERSE);
             rightBack.setDirection(DcMotor.Direction.REVERSE);
             shooter2.setDirection(DcMotor.Direction.REVERSE);
-            intake.setDirection(DcMotor.Direction.REVERSE);
+            intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -89,10 +93,10 @@ public class iris extends LinearOpMode {
             //blocker
 
             if(gamepad2.right_bumper){
-                blocker.setPosition(1.0);
+                shootBlock.setPosition(1.0);
             }
             if(gamepad2.left_bumper){
-                blocker.setPosition(0.0);
+                shootBlock.setPosition(0.0);
             }
 
 
@@ -114,20 +118,21 @@ public class iris extends LinearOpMode {
                 strength = 0.55;
             }
 
-
-
-            if(shootToggle){
                 shooter1.setPower(strength);
                 shooter2.setPower(strength);
-            }
 
 
 
 
 
             // Intake
+            intakeMotor.setPower(-1 * gamepad2.right_stick_y);
 
-            intake.setPower(-1 * gamepad2.right_stick_y);
+            if(gamepad2.right_trigger != 0) {
+                intakeBlock.setPosition(1);
+            } else {
+                intakeBlock.setPosition(0);
+            }
 
             }
 
