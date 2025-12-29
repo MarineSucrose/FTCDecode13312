@@ -33,7 +33,7 @@ public class iris extends LinearOpMode {
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
             pivot = hardwareMap.get(Servo.class, "pivot");
-            shootBlock = hardwareMap.get(Servo.class, "blocker");
+            shootBlock = hardwareMap.get(Servo.class, "shootBlock");
             intakeBlock = hardwareMap.get(Servo.class, "intakeBlock");
 
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
@@ -51,7 +51,7 @@ public class iris extends LinearOpMode {
             while (opModeIsActive()) {
 
             double drivePower = -gamepad1.left_stick_y;
-            double turnPower = gamepad1.right_stick_x;
+            double turnPower = -gamepad1.right_stick_x;
             double strafePower = gamepad1.left_stick_x;
 
             double lfPower = Range.clip(drivePower + turnPower + strafePower, -driveSensitivity, driveSensitivity);
@@ -111,11 +111,11 @@ public class iris extends LinearOpMode {
             }
 
             if(gamepad2.b){
-                strength = 0.75;
+                strength = 0.9;
             }
 
             if(gamepad2.a){
-                strength = 0.55;
+                strength = 0.7;
             }
 
                 shooter1.setPower(strength);
@@ -129,9 +129,9 @@ public class iris extends LinearOpMode {
             intakeMotor.setPower(-1 * gamepad2.right_stick_y);
 
             if(gamepad2.right_trigger != 0) {
-                intakeBlock.setPosition(1);
+                intakeBlock.setPosition(0.0);
             } else {
-                intakeBlock.setPosition(0);
+                intakeBlock.setPosition(0.5);
             }
 
             }
