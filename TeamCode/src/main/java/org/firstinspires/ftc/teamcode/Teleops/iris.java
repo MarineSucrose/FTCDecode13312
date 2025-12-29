@@ -3,26 +3,27 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="t3", group="Linear OpMode")
-public class t3 extends LinearOpMode {
+@TeleOp(name="iris", group="Linear OpMode")
+public class iris extends LinearOpMode {
+
     //Motor Variables
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
-    private DcMotor intakeMotor;
+    private CRServo intake;
     private Servo blocker;
-    private CRServo pivot;
+    private Servo pivot;
 
     private double driveSensitivity = 1;
     private boolean shootToggle = false;
+    private double precision = 1;
+    private double strength = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
-        while (opModeIsActive()) {
 
             //Hardware Maps for motors
             leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -30,16 +31,20 @@ public class t3 extends LinearOpMode {
             rightFront = hardwareMap.get(DcMotor.class, "rightFront");
             rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
-            pivot = hardwareMap.get(CRServo.class, "pivot");
+            pivot = hardwareMap.get(Servo.class, "pivot");
             blocker = hardwareMap.get(Servo.class, "blocker");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
             shooter2 = hardwareMap.get(DcMotor.class, "shooter2");
-            intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+            intake = hardwareMap.get(CRServo.class, "intake");
 
             rightFront.setDirection(DcMotor.Direction.REVERSE);
             rightBack.setDirection(DcMotor.Direction.REVERSE);
             shooter2.setDirection(DcMotor.Direction.REVERSE);
-            intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+            intake.setDirection(DcMotor.Direction.REVERSE);
+
+
+
+            while (opModeIsActive()) {
 
             double drivePower = -gamepad1.left_stick_y;
             double turnPower = gamepad1.right_stick_x;
@@ -50,18 +55,35 @@ public class t3 extends LinearOpMode {
             double lbPower = Range.clip(drivePower + turnPower - strafePower, -driveSensitivity, driveSensitivity);
             double rbPower = Range.clip(drivePower - turnPower + strafePower, -driveSensitivity, driveSensitivity);
 
-            leftFront.setPower(lfPower);
-            leftBack.setPower(lbPower);
-            rightFront.setPower(rfPower);
-            rightBack.setPower(rbPower);
+            if(gamepad1.right_bumper){
+                precision = 1;
+            }
 
+            if(gamepad1.left_bumper){
+                precision = 0.25;
+            }
+
+            leftFront.setPower(lfPower * precision);
+            leftBack.setPower(lbPower * precision);
+            rightFront.setPower(rfPower * precision);
+            rightBack.setPower(rbPower * precision);
 
 
 
 
             //shooter angle adjusting
 
-            pivot.setPower(-gamepad2.left_stick_y / 4);
+            if(gamepad2.dpad_down) {
+                pivot.setPosition(0.25);
+            }
+
+            if(gamepad2.dpad_right) {
+                pivot.setPosition(0.5);
+            }
+
+            if(gamepad2.dpad_up) {
+                pivot.setPosition(0.75);
+            }
 
 
             //blocker
@@ -74,20 +96,29 @@ public class t3 extends LinearOpMode {
             }
 
 
-
-
             //Shooter (toggle)
 
-            if(gamepad2.x){
-                shootToggle = !shootToggle;
+            if(gamepad2.y){
+                strength = -0.2;
             }
 
+            if(gamepad2.x){
+                strength = 0;
+            }
+
+            if(gamepad2.b){
+                strength = 0.75;
+            }
+
+            if(gamepad2.a){
+                strength = 0.55;
+            }
+
+
+
             if(shootToggle){
-                shooter1.setPower(0.9);
-                shooter2.setPower(0.9);
-            } else {
-                shooter1.setPower(0.0);
-                shooter2.setPower(0.0);
+                shooter1.setPower(strength);
+                shooter2.setPower(strength);
             }
 
 
@@ -96,8 +127,10 @@ public class t3 extends LinearOpMode {
 
             // Intake
 
-            intakeMotor.setPower(-1 * gamepad2.right_stick_y);
+            intake.setPower(-1 * gamepad2.right_stick_y);
 
             }
+
         }
+
     }
