@@ -41,8 +41,8 @@ public class iris extends LinearOpMode {
             intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
 
-            rightFront.setDirection(DcMotor.Direction.REVERSE);
-            rightBack.setDirection(DcMotor.Direction.REVERSE);
+            leftFront.setDirection(DcMotor.Direction.REVERSE);
+            leftBack.setDirection(DcMotor.Direction.REVERSE);
             shooter2.setDirection(DcMotor.Direction.REVERSE);
             intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -51,7 +51,7 @@ public class iris extends LinearOpMode {
             while (opModeIsActive()) {
 
             double drivePower = -gamepad1.left_stick_y;
-            double turnPower = -gamepad1.right_stick_x;
+            double turnPower = gamepad1.right_stick_x;
             double strafePower = gamepad1.left_stick_x;
 
             double lfPower = Range.clip(drivePower + turnPower + strafePower, -driveSensitivity, driveSensitivity);
