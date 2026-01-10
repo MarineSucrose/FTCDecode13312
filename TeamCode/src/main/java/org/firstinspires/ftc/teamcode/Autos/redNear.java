@@ -21,8 +21,9 @@ import org.firstinspires.ftc.teamcode.RoadrunnerFiles.MecanumDrive;
 
 
 
-@Autonomous(name="blueFar", group="Linear OpMode")
-public class blueFar extends LinearOpMode {
+@Autonomous(name="redNear", group="Linear OpMode")
+public class redNear extends LinearOpMode {
+
 
     private DcMotor shooter1, shooter2;
     private DcMotor intakeMotor;
@@ -39,9 +40,9 @@ public class blueFar extends LinearOpMode {
         @Override
         public void run() {
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.25);
-            shooter1.setPower(.9);
-            shooter2.setPower(.9);
+            pivot.setPosition(0.75);
+            shooter1.setPower(.7);
+            shooter2.setPower(.7);
             sleep(2000);
 
 
@@ -101,7 +102,7 @@ public class blueFar extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Pose2d beginPose = new Pose2d(-12, -72, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(-60, -60, Math.toRadians(135));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         pivot = hardwareMap.get(Servo.class, "pivot");
@@ -125,14 +126,13 @@ public class blueFar extends LinearOpMode {
 
         Action path = drive.actionBuilder(beginPose)
                 .stopAndAdd(new start())
-                .turnTo(Math.toRadians(300))
+                .strafeToLinearHeading(new Vector2d(-2, 12), Math.toRadians(135))
                 .stopAndAdd(new shoot3Artifacts())
                 .stopAndAdd(new intakeActivate())
-                .splineTo(new Vector2d(-60, -36), Math.toRadians(180))
+                .splineTo(new Vector2d(54,12 ), Math.toRadians(180))
                 .stopAndAdd(new intakeDeactivate())
-                .splineTo(new Vector2d(-12, -60), Math.toRadians(300))
-                .stopAndAdd(new shoot3Artifacts())
-                .strafeToLinearHeading(new Vector2d(-36, -36), 90)
+                .splineTo(new Vector2d(54,12 ), Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(24, 0), Math.toRadians(135))
                 .build();
 
 
@@ -142,3 +142,4 @@ public class blueFar extends LinearOpMode {
     }
 
 }
+

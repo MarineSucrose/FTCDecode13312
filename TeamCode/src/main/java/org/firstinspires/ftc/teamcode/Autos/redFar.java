@@ -21,9 +21,10 @@ import org.firstinspires.ftc.teamcode.RoadrunnerFiles.MecanumDrive;
 
 
 
-@Autonomous(name="blueFar", group="Linear OpMode")
-public class blueFar extends LinearOpMode {
+@Autonomous(name="redFar", group="Linear OpMode")
+public class redFar extends LinearOpMode {
 
+    private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor shooter1, shooter2;
     private DcMotor intakeMotor;
     private Servo intakeBlock;
@@ -72,8 +73,6 @@ public class blueFar extends LinearOpMode {
 
             shootBlock.setPosition(0.5);
 
-
-
         }
     }
 
@@ -101,7 +100,7 @@ public class blueFar extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Pose2d beginPose = new Pose2d(-12, -72, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(12, -72, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         pivot = hardwareMap.get(Servo.class, "pivot");
@@ -125,14 +124,14 @@ public class blueFar extends LinearOpMode {
 
         Action path = drive.actionBuilder(beginPose)
                 .stopAndAdd(new start())
-                .turnTo(Math.toRadians(300))
+                .lineToYLinearHeading(60, Math.toRadians(210))
                 .stopAndAdd(new shoot3Artifacts())
                 .stopAndAdd(new intakeActivate())
-                .splineTo(new Vector2d(-60, -36), Math.toRadians(180))
+                .splineTo(new Vector2d(60, -36), Math.toRadians(0))
                 .stopAndAdd(new intakeDeactivate())
-                .splineTo(new Vector2d(-12, -60), Math.toRadians(300))
+                .splineTo(new Vector2d(12, -60), Math.toRadians(210))
                 .stopAndAdd(new shoot3Artifacts())
-                .strafeToLinearHeading(new Vector2d(-36, -36), 90)
+                .strafeToLinearHeading( new Vector2d(36, -36), 90)
                 .build();
 
 
