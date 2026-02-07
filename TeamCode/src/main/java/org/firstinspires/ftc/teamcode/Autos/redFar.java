@@ -40,9 +40,9 @@ public class redFar extends LinearOpMode {
         @Override
         public void run() {
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.5);
-            shooter1.setVelocity(2100);
-            shooter2.setVelocity(2100);
+            pivot.setPosition(0.75);
+            shooter1.setVelocity(2025);
+            shooter2.setVelocity(2025);
             sleep(2000);
 
 
@@ -120,7 +120,8 @@ public class redFar extends LinearOpMode {
 
         Action path = drive.actionBuilder(beginPose)
                 .stopAndAdd(new start())
-                .strafeToLinearHeading(new Vector2d(18, -60), Math.toRadians(260))
+                .strafeToLinearHeading(new Vector2d(18, -60), Math.toRadians(90))
+                .turnTo(Math.toRadians(260))
                 .stopAndAdd(new shoot3Artifacts())
                 .stopAndAdd(new intakeActivate())
                 .strafeToLinearHeading(new Vector2d(18, -36), Math.toRadians(0))
