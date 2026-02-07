@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autos;
+package org.firstinspires.ftc.teamcode.RoadrunnerFiles.Autos;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.RoadrunnerFiles.MecanumDrive;
 
 
 
-@Autonomous(name="blueFar", group="Linear OpMode")
-public class blueFar extends LinearOpMode {
+@Autonomous(name="blueNear", group="Linear OpMode")
+public class blueNear extends LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
@@ -40,9 +40,9 @@ public class blueFar extends LinearOpMode {
         @Override
         public void run() {
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.75);
-            shooter1.setVelocity(2025);
-            shooter2.setVelocity(2025);
+            pivot.setPosition(0.25);
+            shooter1.setVelocity(1350);
+            shooter2.setVelocity(1350);
             sleep(2000);
 
 
@@ -55,11 +55,10 @@ public class blueFar extends LinearOpMode {
         @Override
         public void run(){
             shootBlock.setPosition(0);
-
             intakeMotor.setPower(1);
-            sleep(2000);
-            intakeMotor.setPower(0);
+            sleep(1000);
             shootBlock.setPosition(0.5);
+
 
 
 
@@ -90,7 +89,7 @@ public class blueFar extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Pose2d beginPose = new Pose2d(-6, -72, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(-60, 60, Math.toRadians(315));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         pivot = hardwareMap.get(Servo.class, "pivot");
@@ -120,16 +119,9 @@ public class blueFar extends LinearOpMode {
 
         Action path = drive.actionBuilder(beginPose)
                 .stopAndAdd(new start())
-                .strafeToLinearHeading(new Vector2d(-18, -60), Math.toRadians(90))
-                .turnTo(Math.toRadians(280))
+                .strafeTo(new Vector2d(-48, 48))
                 .stopAndAdd(new shoot3Artifacts())
-                .stopAndAdd(new intakeActivate())
-                .strafeToLinearHeading(new Vector2d(-18, -36), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-48, -36), Math.toRadians(180))
-                .stopAndAdd(new intakeDeactivate())
-                .strafeToLinearHeading(new Vector2d(-18, -60), Math.toRadians(290))
-                .stopAndAdd(new shoot3Artifacts())
-                .strafeToLinearHeading(new Vector2d(-48, -24), 90)
+                .strafeTo(new Vector2d(-48, 24))
                 .build();
 
 

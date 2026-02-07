@@ -21,8 +21,9 @@ public class iris extends LinearOpMode {
 
     private double driveSensitivity = 1;
     private double precision = 1;
-    private double highVel = 2100;
-    private double lowVel = 1250;
+    private double highVel = 2200;
+    private double mediumVel = 1500;
+    private double lowVel = 1300;
     private double curVel = 0;
 
     @Override
@@ -116,6 +117,10 @@ public class iris extends LinearOpMode {
 
             if (gamepad2.b) {
                 curVel = highVel;
+            }
+
+            if (gamepad2.y) {
+                curVel = mediumVel;
             }
 
             if (gamepad2.a) {
