@@ -21,7 +21,7 @@ public class iris extends LinearOpMode {
 
     private double driveSensitivity = 1;
     private double precision = 1;
-    private double highVel = 2200;
+    private double highVel = 2000;
     private double mediumVel = 1500;
     private double lowVel = 1300;
     private double curVel = 0;
@@ -53,7 +53,7 @@ public class iris extends LinearOpMode {
         shooter1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         shooter2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(335, 0, 0, 25);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(400, 0, 0, 5);
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooter2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
@@ -117,14 +117,18 @@ public class iris extends LinearOpMode {
 
             if (gamepad2.b) {
                 curVel = highVel;
+                pivot.setPosition(0.5);
             }
 
             if (gamepad2.y) {
                 curVel = mediumVel;
+                pivot.setPosition(0.25);
+
             }
 
             if (gamepad2.a) {
                 curVel = lowVel;
+                pivot.setPosition(0.25);
             }
 
             shooter1.setVelocity(curVel);

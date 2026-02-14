@@ -40,7 +40,7 @@ public class blueFar extends LinearOpMode {
         @Override
         public void run() {
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.75);
+            pivot.setPosition(0.5);
             shooter1.setVelocity(2025);
             shooter2.setVelocity(2025);
             sleep(2000);

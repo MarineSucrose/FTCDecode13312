@@ -14,7 +14,7 @@ public class shooterTuner extends OpMode {
     public DcMotorEx shooter1;
     public DcMotorEx shooter2;
     public DcMotorEx intakeMotor;
-    public double highVelocity = 2200;
+    public double highVelocity = 2000;
     public double lowVelocity = 1300;
 
 
