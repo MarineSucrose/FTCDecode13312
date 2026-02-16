@@ -72,7 +72,7 @@ public class ppBlueFar extends  LinearOpMode {
 
         clearTurntoShootPos = follower.pathBuilder()
                 .addPath(new BezierLine(clearTurn, shootPos))
-                .setLinearHeadingInterpolation(clearTurn.getHeading(), shootPos.getHeading())
+                .setLinearHeadingInterpolation(clearTurn.getHeading(), 300)
                 .build();
 
         shootPosToPrepP1 = follower.pathBuilder()
@@ -133,13 +133,7 @@ public class ppBlueFar extends  LinearOpMode {
 
             case shootPreload:
                 if (!follower.isBusy()) {
-
-                    shootBlock.setPosition(0);
-                    intakeMotor.setPower(1);
-                    sleep(2000);
-                    intakeMotor.setPower(0);
-                    shootBlock.setPosition(0.5);
-
+                    shoot();
                     pathState = PathState.prepPickup1;
                 }
 
@@ -147,7 +141,6 @@ public class ppBlueFar extends  LinearOpMode {
                 if (!follower.isBusy()) {
                     intakeMotor.setPower(1);
                     follower.followPath(shootPosToPrepP1, true);
-                    intakeMotor.setPower(1);
                     pathState = PathState.pickup1;
                 }
 
@@ -167,13 +160,7 @@ public class ppBlueFar extends  LinearOpMode {
 
             case shootRound1:
                 if (!follower.isBusy()) {
-
-                    shootBlock.setPosition(0);
-                    intakeMotor.setPower(1);
-                    sleep(2000);
-                    intakeMotor.setPower(0);
-                    shootBlock.setPosition(0.5);
-
+                   shoot();
                     pathState = PathState.prepPickup2;
                 }
 
@@ -203,13 +190,7 @@ public class ppBlueFar extends  LinearOpMode {
 
             case shootRound2:
                 if (!follower.isBusy()) {
-
-                    shootBlock.setPosition(0);
-                    intakeMotor.setPower(1);
-                    sleep(2000);
-                    intakeMotor.setPower(0);
-                    shootBlock.setPosition(0.5);
-
+                    shoot();
                     pathState = PathState.toEndPose;
                 }
 
@@ -220,6 +201,24 @@ public class ppBlueFar extends  LinearOpMode {
 
         }
     }
+
+    public void shoot(){
+
+        for (int i = 0; i <=3; i++) {
+            shootBlock.setPosition(0);
+
+            intakeMotor.setPower(1);
+            sleep(200);
+            intakeMotor.setPower(0);
+            sleep(400);
+
+
+        }
+
+        shootBlock.setPosition(0.5);
+
+    }
+
 
 
 
@@ -265,8 +264,8 @@ public class ppBlueFar extends  LinearOpMode {
 
             shootBlock.setPosition(0.5);
             pivot.setPosition(0.5);
-            shooter1.setVelocity(2000);
-            shooter2.setVelocity(2000);
+            shooter1.setVelocity(2050);
+            shooter2.setVelocity(2050);
 
 
         }

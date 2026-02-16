@@ -21,7 +21,7 @@ public class iris extends LinearOpMode {
 
     private double driveSensitivity = 1;
     private double precision = 1;
-    private double highVel = 2000;
+    private double highVel = 2050;
     private double mediumVel = 1500;
     private double lowVel = 1300;
     private double curVel = 0;

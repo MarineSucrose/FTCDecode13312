@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
 
-@Autonomous (name="ppRedFar", group="Linear OpMode")
-public class ppRedFar extends  LinearOpMode {
+@Autonomous (name="ppBlueShort", group="Linear OpMode")
+public class ppBlueShort extends  LinearOpMode {
 
 
     private DcMotorEx shooter1, shooter2;
@@ -44,8 +44,7 @@ public class ppRedFar extends  LinearOpMode {
     private enum PathState {
 
 
-        startPosToClearTurn,
-        clearTurnToShootPos,
+        startPosToShootPos,
         shootPreload,
         prepPickup1,
         pickup1,
@@ -65,33 +64,30 @@ public class ppRedFar extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(88, 8, Math.toRadians(90));
-    private final Pose clearTurn = new Pose(88, 12, Math.toRadians(90));
-    private final Pose shootPos = new Pose(88, 18, Math.toRadians(240));
-    private final Pose prepPickup1 = new Pose(96, 35, Math.toRadians(0));
-    private final Pose pickup1 = new Pose(130, 35, Math.toRadians(0));
-    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
-    private final Pose pickup2 = new Pose(130, 60, Math.toRadians(0));
-    private final Pose endPose = new Pose(112, 12, Math.toRadians(0));
+    private final Pose startPos = new Pose(19, 124, Math.toRadians(324));
+    private final Pose shootPos = new Pose(36, 108, Math.toRadians(314));
+
+    private final Pose prepPickup1 = new Pose(48, 84, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(6, 84, Math.toRadians(180));
+
+    private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(6, 60, Math.toRadians(180))
+            ;
+    private final Pose endPose = new Pose(24, 100, Math.toRadians(270));
 
 
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToClearTurn, clearTurntoShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
 
 
     public void buildPaths() {
-        startPosToClearTurn = follower.pathBuilder()
-                .addPath(new BezierLine(startPos, clearTurn))
-                .setLinearHeadingInterpolation(startPos.getHeading(), clearTurn.getHeading())
+        startPosToShootPos = follower.pathBuilder()
+                .addPath(new BezierLine(startPos, shootPos))
+                .setLinearHeadingInterpolation(startPos.getHeading(), shootPos.getHeading())
                 .build();
 
-
-        clearTurntoShootPos = follower.pathBuilder()
-                .addPath(new BezierLine(clearTurn, shootPos))
-                .setLinearHeadingInterpolation(clearTurn.getHeading(), 240)
-                .build();
 
 
         shootPosToPrepP1 = follower.pathBuilder()
@@ -152,17 +148,11 @@ public class ppRedFar extends  LinearOpMode {
         switch (pathState) {
 
 
-            case startPosToClearTurn:
-                follower.followPath(startPosToClearTurn, true);
-                pathState = PathState.clearTurnToShootPos;
+            case startPosToShootPos:
+                follower.followPath(startPosToShootPos, true);
+                pathState = PathState.shootPreload;
                 break;
 
-
-            case clearTurnToShootPos:
-                if (!follower.isBusy()) {
-                    follower.followPath(clearTurntoShootPos, true);
-                    pathState = PathState.shootPreload;
-                }
 
 
             case shootPreload:
@@ -283,7 +273,7 @@ public class ppRedFar extends  LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        pathState = PathState.startPosToClearTurn;
+        pathState = PathState.startPosToShootPos;
         opmodeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
 
