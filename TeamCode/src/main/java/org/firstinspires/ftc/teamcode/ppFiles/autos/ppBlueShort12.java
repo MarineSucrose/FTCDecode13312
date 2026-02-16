@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
 
-@Autonomous (name="ppRedShort", group="Linear OpMode")
-public class ppRedShort extends  LinearOpMode {
+@Autonomous (name="ppBlueShort12", group="Linear OpMode")
+public class ppBlueShort12 extends  LinearOpMode {
 
 
     private DcMotorEx shooter1, shooter2;
@@ -56,6 +56,11 @@ public class ppRedShort extends  LinearOpMode {
         prepReturn2,
         returnShootPos2,
         shootRound2,
+        prepPickup3,
+        pickup3,
+        clearGate2,
+        returnShootPos3,
+        shootRound3,
         toEndPose
     }
 
@@ -66,20 +71,19 @@ public class ppRedShort extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(126, 126, Math.toRadians(215));
-    private final Pose shootPos = new Pose(115, 115, Math.toRadians(225));
+    private final Pose startPos = new Pose(19, 124, Math.toRadians(324));
+    private final Pose shootPos = new Pose(28, 115, Math.toRadians(314));
 
+    private final Pose prepPickup1 = new Pose(48, 84, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(16, 84, Math.toRadians(180));
 
-    private final Pose prepPickup1 = new Pose(96, 84, Math.toRadians(0));
-    private final Pose pickup1 = new Pose(128, 84, Math.toRadians(0));
+    private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(16, 60, Math.toRadians(180));
 
+    private final Pose prepPickup3 = new Pose(48, 36, Math.toRadians(0));
+    private final Pose pickup3 = new Pose(16, 36, Math.toRadians(0));
 
-    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
-    private final Pose pickup2 = new Pose(128, 60, Math.toRadians(0));
-
-
-    private final Pose prepReturn2 = new Pose(84, 84, 225);
-
+    private final Pose prepReturn = new Pose(60, 84, 314);
 
     private final Pose endPose = new Pose(120, 100, Math.toRadians(270));
 
@@ -89,7 +93,7 @@ public class ppRedShort extends  LinearOpMode {
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, clearGate, prep2ToPrepReturn2, returnShootPos2, toEndPos;
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, clearGate, prep2ToPrepReturn2, returnShootPos2, shootPosToPrepP3, prepP3ToP3, clearGate2, returnShootPos3, toEndPos;
 
 
     public void buildPaths() {
@@ -135,14 +139,36 @@ public class ppRedShort extends  LinearOpMode {
                 .build();
 
         prep2ToPrepReturn2 = follower.pathBuilder()
-                .addPath(new BezierLine(prepPickup2, prepReturn2))
-                .setLinearHeadingInterpolation(prepPickup2.getHeading(), prepReturn2.getHeading())
+                .addPath(new BezierLine(prepPickup2, prepReturn))
+                .setLinearHeadingInterpolation(prepPickup2.getHeading(), prepReturn.getHeading())
                 .build();
 
 
         returnShootPos2 = follower.pathBuilder()
                 .addPath(new BezierLine(pickup2, shootPos))
                 .setLinearHeadingInterpolation(pickup2.getHeading(), shootPos.getHeading())
+                .build();
+
+        shootPosToPrepP3 = follower.pathBuilder()
+                .addPath(new BezierLine(shootPos, prepPickup3))
+                .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup3.getHeading())
+                .build();
+
+
+        prepP3ToP3 = follower.pathBuilder()
+                .addPath(new BezierLine(prepPickup3, pickup3))
+                .setTangentHeadingInterpolation()
+                .build();
+
+        clearGate2 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3, prepPickup3))
+                .setLinearHeadingInterpolation(pickup3.getHeading(), prepPickup3.getHeading())
+                .build();
+
+
+        returnShootPos3 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3, shootPos))
+                .setLinearHeadingInterpolation(pickup3.getHeading(), shootPos.getHeading())
                 .build();
 
 
@@ -155,6 +181,9 @@ public class ppRedShort extends  LinearOpMode {
 
 
     }
+
+
+
 
 
 
@@ -261,9 +290,44 @@ public class ppRedShort extends  LinearOpMode {
             case shootRound2:
                 if (!follower.isBusy()) {
                     shoot();
-                    pathState = PathState.toEndPose;
+                    pathState = PathState.prepPickup3;
                 }
 
+
+
+
+            case prepPickup3:
+                if (!follower.isBusy()) {
+                    follower.followPath(shootPosToPrepP3, true);
+                    intakeMotor.setPower(1);
+                    pathState = PathState.pickup3;
+                }
+
+
+            case pickup3:
+                if (!follower.isBusy()) {
+                    follower.followPath(prepP3ToP3, true);
+                    pathState = PathState.clearGate2;
+                }
+
+
+            case clearGate2:
+                if (!follower.isBusy()) {
+                    follower.followPath(clearGate2, true);
+                    pathState = PathState.returnShootPos3;
+                }
+
+            case returnShootPos3:
+                if (!follower.isBusy()) {
+                    follower.followPath(returnShootPos3, true);
+                    pathState = PathState.shootRound3;
+                }
+
+            case shootRound3:
+                if (!follower.isBusy()) {
+                    shoot();
+                    pathState = PathState.toEndPose;
+                }
 
             case toEndPose:
                 if (!follower.isBusy()) {

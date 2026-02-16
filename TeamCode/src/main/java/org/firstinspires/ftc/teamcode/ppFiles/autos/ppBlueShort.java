@@ -52,6 +52,8 @@ public class ppBlueShort extends  LinearOpMode {
         shootRound1,
         prepPickup2,
         pickup2,
+        clearGate,
+        prepReturn2,
         returnShootPos2,
         shootRound2,
         toEndPose
@@ -65,21 +67,23 @@ public class ppBlueShort extends  LinearOpMode {
 
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(19, 124, Math.toRadians(324));
-    private final Pose shootPos = new Pose(36, 108, Math.toRadians(314));
+    private final Pose shootPos = new Pose(28, 115, Math.toRadians(314));
 
     private final Pose prepPickup1 = new Pose(48, 84, Math.toRadians(180));
-    private final Pose pickup1 = new Pose(6, 84, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(16, 84, Math.toRadians(180));
 
     private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
-    private final Pose pickup2 = new Pose(6, 60, Math.toRadians(180))
-            ;
+    private final Pose pickup2 = new Pose(16, 60, Math.toRadians(180));
+
+    private final Pose prepReturn2 = new Pose(60, 84, 314);
+
     private final Pose endPose = new Pose(24, 100, Math.toRadians(270));
 
 
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, clearGate, prep2ToPrepReturn2, returnShootPos2, toEndPos;
 
 
     public void buildPaths() {
@@ -117,6 +121,16 @@ public class ppBlueShort extends  LinearOpMode {
         prepP2ToP2 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup2, pickup2))
                 .setTangentHeadingInterpolation()
+                .build();
+
+        clearGate = follower.pathBuilder()
+                .addPath(new BezierLine(pickup2, prepPickup2))
+                .setLinearHeadingInterpolation(pickup2.getHeading(), prepPickup2.getHeading())
+                .build();
+
+        prep2ToPrepReturn2 = follower.pathBuilder()
+                .addPath(new BezierLine(prepPickup2, prepReturn2))
+                .setLinearHeadingInterpolation(prepPickup2.getHeading(), prepReturn2.getHeading())
                 .build();
 
 
@@ -164,8 +178,8 @@ public class ppBlueShort extends  LinearOpMode {
 
             case prepPickup1:
                 if (!follower.isBusy()) {
-                    intakeMotor.setPower(1);
                     follower.followPath(shootPosToPrepP1, true);
+                    intakeMotor.setPower(1);
                     pathState = PathState.pickup1;
                 }
 
@@ -179,8 +193,8 @@ public class ppBlueShort extends  LinearOpMode {
 
             case returnShootPos1:
                 if (!follower.isBusy()) {
-                    intakeMotor.setPower(0);
                     follower.followPath(returnShootPos1, true);
+                    intakeMotor.setPower(0);
                     pathState = PathState.shootRound1;
                 }
 
@@ -202,8 +216,8 @@ public class ppBlueShort extends  LinearOpMode {
 
             case prepPickup2:
                 if (!follower.isBusy()) {
-                    intakeMotor.setPower(1);
                     follower.followPath(shootPosToPrepP2, true);
+                    intakeMotor.setPower(1);
                     pathState = PathState.pickup2;
                 }
 
@@ -211,14 +225,27 @@ public class ppBlueShort extends  LinearOpMode {
             case pickup2:
                 if (!follower.isBusy()) {
                     follower.followPath(prepP2ToP2, true);
+                    pathState = PathState.clearGate;
+                }
+
+            case clearGate:
+                if (!follower.isBusy()) {
+                    follower.followPath(clearGate, true);
+                    pathState = PathState.prepReturn2;
+                }
+
+            case prepReturn2:
+                if (!follower.isBusy()) {
+                    follower.followPath(prep2ToPrepReturn2, true);
                     pathState = PathState.returnShootPos2;
                 }
 
 
+
             case returnShootPos2:
                 if (!follower.isBusy()) {
-                    intakeMotor.setPower(0);
                     follower.followPath(returnShootPos2, true);
+                    intakeMotor.setPower(0);
                     pathState = PathState.shootRound2;
                 }
 
@@ -250,9 +277,9 @@ public class ppBlueShort extends  LinearOpMode {
 
 
             intakeMotor.setPower(1);
-            sleep(200);
+            sleep(250);
             intakeMotor.setPower(0);
-            sleep(400);
+            sleep(450);
 
 
 
@@ -329,9 +356,9 @@ public class ppBlueShort extends  LinearOpMode {
 
 
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.5);
-            shooter1.setVelocity(2050);
-            shooter2.setVelocity(2050);
+            pivot.setPosition(0.25);
+            shooter1.setVelocity(1300);
+            shooter2.setVelocity(1300);
 
 
 
