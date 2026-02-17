@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ppFiles.autos;
 
-
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -13,15 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
-
-
 
 
 @Autonomous (name="ppRedFar", group="Linear OpMode")
 public class ppRedFar extends  LinearOpMode {
-
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
@@ -31,21 +26,14 @@ public class ppRedFar extends  LinearOpMode {
 
 
 
-
-
-
     private Follower follower;
     private Timer opmodeTimer;
-
-
 
 
     //these are the different "states" the robot will be in, specific movements and actions
     private enum PathState {
 
-
-        startPosToClearTurn,
-        clearTurnToShootPos,
+        startPosToShootPos,
         shootPreload,
         prepPickup1,
         pickup1,
@@ -58,39 +46,29 @@ public class ppRedFar extends  LinearOpMode {
         toEndPose
     }
 
-
     PathState pathState;
 
 
-
-
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(88, 8, Math.toRadians(90));
-    private final Pose clearTurn = new Pose(88, 12, Math.toRadians(90));
-    private final Pose shootPos = new Pose(88, 18, Math.toRadians(240));
-    private final Pose prepPickup1 = new Pose(96, 35, Math.toRadians(0));
-    private final Pose pickup1 = new Pose(130, 35, Math.toRadians(0));
-    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
-    private final Pose pickup2 = new Pose(130, 60, Math.toRadians(0));
-    private final Pose endPose = new Pose(112, 12, Math.toRadians(0));
+    private final Pose startPos = new Pose(78, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(78, 18, Math.toRadians(294));
 
+    private final Pose prepPickup1 = new Pose(96, 35, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(142, 35, Math.toRadians(180));
 
+    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(142, 60, Math.toRadians(180));
+
+    private final Pose endPose = new Pose(112, 12, Math.toRadians(90));
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToClearTurn, clearTurntoShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
-
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
 
     public void buildPaths() {
-        startPosToClearTurn = follower.pathBuilder()
-                .addPath(new BezierLine(startPos, clearTurn))
-                .setLinearHeadingInterpolation(startPos.getHeading(), clearTurn.getHeading())
-                .build();
-
-
-        clearTurntoShootPos = follower.pathBuilder()
-                .addPath(new BezierLine(clearTurn, shootPos))
-                .setLinearHeadingInterpolation(clearTurn.getHeading(), 240)
+        startPosToShootPos = follower.pathBuilder()
+                .addPath(new BezierLine(startPos, shootPos))
+                .setLinearHeadingInterpolation(startPos.getHeading(), shootPos.getHeading())
                 .build();
 
 
@@ -99,36 +77,30 @@ public class ppRedFar extends  LinearOpMode {
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup1.getHeading())
                 .build();
 
-
         prepP1ToP1 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup1, pickup1))
                 .setTangentHeadingInterpolation()
                 .build();
-
 
         returnShootPos1 = follower.pathBuilder()
                 .addPath(new BezierLine(pickup1, shootPos))
                 .setLinearHeadingInterpolation(pickup1.getHeading(), shootPos.getHeading())
                 .build();
 
-
         shootPosToPrepP2 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup2))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup2.getHeading())
                 .build();
-
 
         prepP2ToP2 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup2, pickup2))
                 .setTangentHeadingInterpolation()
                 .build();
 
-
         returnShootPos2 = follower.pathBuilder()
                 .addPath(new BezierLine(pickup2, shootPos))
                 .setLinearHeadingInterpolation(pickup2.getHeading(), shootPos.getHeading())
                 .build();
-
 
         toEndPos = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, endPose))
@@ -136,41 +108,27 @@ public class ppRedFar extends  LinearOpMode {
                 .build();
 
 
-
-
     }
-
-
-
 
 
 
     //this is what will activate each path and action in a sequence after it is called
 
-
     public void statePathUpdate() {
         switch (pathState) {
 
-
-            case startPosToClearTurn:
-                follower.followPath(startPosToClearTurn, true);
-                pathState = PathState.clearTurnToShootPos;
-                break;
-
-
-            case clearTurnToShootPos:
+            case startPosToShootPos:
                 if (!follower.isBusy()) {
-                    follower.followPath(clearTurntoShootPos, true);
+                    follower.followPath(startPosToShootPos, true);
                     pathState = PathState.shootPreload;
                 }
 
-
             case shootPreload:
                 if (!follower.isBusy()) {
+                    sleep(1000);
                     shoot();
                     pathState = PathState.prepPickup1;
                 }
-
 
             case prepPickup1:
                 if (!follower.isBusy()) {
@@ -179,13 +137,11 @@ public class ppRedFar extends  LinearOpMode {
                     pathState = PathState.pickup1;
                 }
 
-
             case pickup1:
                 if (!follower.isBusy()) {
                     follower.followPath(prepP1ToP1, true);
                     pathState = PathState.returnShootPos1;
                 }
-
 
             case returnShootPos1:
                 if (!follower.isBusy()) {
@@ -193,8 +149,6 @@ public class ppRedFar extends  LinearOpMode {
                     follower.followPath(returnShootPos1, true);
                     pathState = PathState.shootRound1;
                 }
-
-
 
 
             case shootRound1:
@@ -206,10 +160,6 @@ public class ppRedFar extends  LinearOpMode {
 
 
 
-
-
-
-
             case prepPickup2:
                 if (!follower.isBusy()) {
                     intakeMotor.setPower(1);
@@ -217,13 +167,11 @@ public class ppRedFar extends  LinearOpMode {
                     pathState = PathState.pickup2;
                 }
 
-
             case pickup2:
                 if (!follower.isBusy()) {
                     follower.followPath(prepP2ToP2, true);
                     pathState = PathState.returnShootPos2;
                 }
-
 
             case returnShootPos2:
                 if (!follower.isBusy()) {
@@ -233,80 +181,57 @@ public class ppRedFar extends  LinearOpMode {
                 }
 
 
-
-
             case shootRound2:
                 if (!follower.isBusy()) {
                     shoot();
                     pathState = PathState.toEndPose;
                 }
 
-
             case toEndPose:
                 if (!follower.isBusy()) {
                     follower.followPath(toEndPos, true);
                 }
 
-
         }
     }
 
-
     public void shoot(){
-
 
         for (int i = 0; i <=3; i++) {
             shootBlock.setPosition(0);
 
-
             intakeMotor.setPower(1);
-            sleep(200);
+            sleep(300);
             intakeMotor.setPower(0);
-            sleep(400);
-
-
+            sleep(500);
 
 
         }
 
         shootBlock.setPosition(0.5);
 
-
     }
-
-
-
-
 
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        pathState = PathState.startPosToClearTurn;
+        pathState = PathState.startPosToShootPos;
         opmodeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
-
-
-
-
-
 
         pivot = hardwareMap.get(Servo.class, "pivot");
         shootBlock = hardwareMap.get(Servo.class, "shootBlock");
         intakeBlock = hardwareMap.get(Servo.class, "intakeBlock");
-
 
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
 
-
-
         shooter2.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(400, 0, 0, 5);
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -314,41 +239,27 @@ public class ppRedFar extends  LinearOpMode {
 
 
 
-
-
-
         buildPaths();
         follower.setPose(startPos);
-
-
 
 
         waitForStart();
 
 
-
-
         while (opModeIsActive()) {
-
 
             follower.update();
             statePathUpdate();
 
-
             telemetry.addData("path state ", pathState.toString());
 
-
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.5);
-            shooter1.setVelocity(2050);
-            shooter2.setVelocity(2050);
-
-
+            pivot.setPosition(1);
+            shooter1.setVelocity(1975);
+            shooter2.setVelocity(1975);
 
 
         }
 
-
     }
 }
-

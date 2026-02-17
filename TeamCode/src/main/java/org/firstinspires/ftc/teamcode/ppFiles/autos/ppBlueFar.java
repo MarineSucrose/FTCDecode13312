@@ -33,8 +33,7 @@ public class ppBlueFar extends  LinearOpMode {
     //these are the different "states" the robot will be in, specific movements and actions
     private enum PathState {
 
-        startPosToClearTurn,
-        clearTurnToShootPos,
+        startPosToShootPos,
         shootPreload,
         prepPickup1,
         pickup1,
@@ -51,29 +50,27 @@ public class ppBlueFar extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(56, 8, Math.toRadians(90));
-    private final Pose clearTurn = new Pose(56, 12, Math.toRadians(90));
-    private final Pose shootPos = new Pose(56, 18, Math.toRadians(300));
+    private final Pose startPos = new Pose(54, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(54, 18, Math.toRadians(294));
+
     private final Pose prepPickup1 = new Pose(48, 35, Math.toRadians(180));
-    private final Pose pickup1 = new Pose(14, 35, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(2, 35, Math.toRadians(180));
+
     private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
-    private final Pose pickup2 = new Pose(14, 60, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(2, 60, Math.toRadians(180));
+
     private final Pose endPose = new Pose(32, 12, Math.toRadians(90));
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToClearTurn, clearTurntoShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
 
     public void buildPaths() {
-        startPosToClearTurn = follower.pathBuilder()
-                .addPath(new BezierLine(startPos, clearTurn))
-                .setLinearHeadingInterpolation(startPos.getHeading(), clearTurn.getHeading())
+        startPosToShootPos = follower.pathBuilder()
+                .addPath(new BezierLine(startPos, shootPos))
+                .setLinearHeadingInterpolation(startPos.getHeading(), shootPos.getHeading())
                 .build();
 
-        clearTurntoShootPos = follower.pathBuilder()
-                .addPath(new BezierLine(clearTurn, shootPos))
-                .setLinearHeadingInterpolation(clearTurn.getHeading(), 300)
-                .build();
 
         shootPosToPrepP1 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup1))
@@ -120,19 +117,15 @@ public class ppBlueFar extends  LinearOpMode {
     public void statePathUpdate() {
         switch (pathState) {
 
-            case startPosToClearTurn:
-                follower.followPath(startPosToClearTurn, true);
-                pathState = PathState.clearTurnToShootPos;
-                break;
-
-            case clearTurnToShootPos:
+            case startPosToShootPos:
                 if (!follower.isBusy()) {
-                    follower.followPath(clearTurntoShootPos, true);
+                    follower.followPath(startPosToShootPos, true);
                     pathState = PathState.shootPreload;
                 }
 
             case shootPreload:
                 if (!follower.isBusy()) {
+                    sleep(1000);
                     shoot();
                     pathState = PathState.prepPickup1;
                 }
@@ -208,9 +201,9 @@ public class ppBlueFar extends  LinearOpMode {
             shootBlock.setPosition(0);
 
             intakeMotor.setPower(1);
-            sleep(200);
+            sleep(300);
             intakeMotor.setPower(0);
-            sleep(400);
+            sleep(500);
 
 
         }
@@ -224,11 +217,9 @@ public class ppBlueFar extends  LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        pathState = PathState.startPosToClearTurn;
+        pathState = PathState.startPosToShootPos;
         opmodeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
-
-
 
         pivot = hardwareMap.get(Servo.class, "pivot");
         shootBlock = hardwareMap.get(Servo.class, "shootBlock");
@@ -263,9 +254,9 @@ public class ppBlueFar extends  LinearOpMode {
             telemetry.addData("path state ", pathState.toString());
 
             shootBlock.setPosition(0.5);
-            pivot.setPosition(0.5);
-            shooter1.setVelocity(2050);
-            shooter2.setVelocity(2050);
+            pivot.setPosition(1);
+            shooter1.setVelocity(1975);
+            shooter2.setVelocity(1975);
 
 
         }

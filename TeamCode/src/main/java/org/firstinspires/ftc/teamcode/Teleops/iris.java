@@ -86,14 +86,17 @@ public class iris extends LinearOpMode {
             //shooter angle adjusting
 
             if (gamepad2.dpad_down) {
+                //shoot up
                 pivot.setPosition(0.25);
             }
 
             if (gamepad2.dpad_right) {
+                //shoot medium
                 pivot.setPosition(0.5);
             }
 
             if (gamepad2.dpad_up) {
+                //shoot more forward
                 pivot.setPosition(0.75);
             }
 
