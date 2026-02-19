@@ -73,7 +73,7 @@ public class ppRedShort extends  LinearOpMode {
 
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(126, 126, Math.toRadians(215));
-    private final Pose shootPos = new Pose(111, 111, Math.toRadians(217));
+    private final Pose shootPos = new Pose(115, 115, Math.toRadians(225));
 
     private final Pose prepPickup1 = new Pose(96, 84, Math.toRadians(0));
     private final Pose pickup1 = new Pose(128, 84, Math.toRadians(0));
@@ -190,8 +190,8 @@ public class ppRedShort extends  LinearOpMode {
 
                 shootBlock.setPosition(0.5);
                 pivot.setPosition(0.25);
-                shooter1.setVelocity(1450);
-                shooter2.setVelocity(1450);
+                shooter1.setVelocity(1350);
+                shooter2.setVelocity(1350);
 
                 follower.followPath(startPosToShootPos, true);
                 pathState = PathState.shootPreload;
@@ -271,8 +271,8 @@ public class ppRedShort extends  LinearOpMode {
                     intakeMotor.setPower(0);
 
                     pivot.setPosition(0.5);
-                    shooter1.setVelocity(1650);
-                    shooter2.setVelocity(1650);
+                    shooter1.setVelocity(1675);
+                    shooter2.setVelocity(1675);
 
 
                     pathState = PathState.shootRound2;
@@ -333,7 +333,7 @@ public class ppRedShort extends  LinearOpMode {
     }
 
     public void Shoot(){
-        for (int i = 0; i <3; i++) {
+        for (int i = 0; i <=3; i++) {
             shootBlock.setPosition(0);
 
             intakeMotor.setPower(1);

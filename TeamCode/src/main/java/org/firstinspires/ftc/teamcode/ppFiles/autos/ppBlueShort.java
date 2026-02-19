@@ -73,7 +73,7 @@ public class ppBlueShort extends  LinearOpMode {
 
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(19, 124, Math.toRadians(325));
-    private final Pose shootPos = new Pose(34, 109, Math.toRadians(323));
+    private final Pose shootPos = new Pose(28, 115, Math.toRadians(315));
 
     private final Pose prepPickup1 = new Pose(48, 84, Math.toRadians(180));
     private final Pose pickup1 = new Pose(16, 84, Math.toRadians(180));
@@ -84,7 +84,7 @@ public class ppBlueShort extends  LinearOpMode {
     private final Pose prepPickup3 = new Pose(54, 36, Math.toRadians(180));
     private final Pose pickup3 = new Pose(16, 36, Math.toRadians(180));
 
-    private final Pose mediumShot = new Pose(56, 90, Math.toRadians(314));
+    private final Pose mediumShot = new Pose(54, 90, Math.toRadians(314));
 
 
     private final Pose endPose = new Pose(16, 90, Math.toRadians(270));
@@ -191,8 +191,8 @@ public class ppBlueShort extends  LinearOpMode {
 
                 shootBlock.setPosition(0.5);
                 pivot.setPosition(0.25);
-                shooter1.setVelocity(1400);
-                shooter2.setVelocity(1400);
+                shooter1.setVelocity(1350);
+                shooter2.setVelocity(1350);
 
                 follower.followPath(startPosToShootPos, true);
                 pathState = PathState.shootPreload;
@@ -272,8 +272,8 @@ public class ppBlueShort extends  LinearOpMode {
                     intakeMotor.setPower(0);
 
                     pivot.setPosition(0.5);
-                    shooter1.setVelocity(1650);
-                    shooter2.setVelocity(1650);
+                    shooter1.setVelocity(1675);
+                    shooter2.setVelocity(1675);
 
 
                     pathState = PathState.shootRound2;
@@ -334,7 +334,7 @@ public class ppBlueShort extends  LinearOpMode {
     }
 
     public void Shoot(){
-        for (int i = 0; i <3; i++) {
+        for (int i = 0; i <=3; i++) {
             shootBlock.setPosition(0);
 
             intakeMotor.setPower(1);
