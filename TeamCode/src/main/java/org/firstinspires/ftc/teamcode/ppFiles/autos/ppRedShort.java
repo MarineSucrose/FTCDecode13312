@@ -25,7 +25,6 @@ public class ppRedShort extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
-    private Servo intakeBlock;
     private Servo shootBlock;
     private Servo pivot;
 
@@ -46,16 +45,23 @@ public class ppRedShort extends  LinearOpMode {
 
         startPosToShootPos,
         shootPreload,
+
         prepPickup1,
         pickup1,
         returnShootPos1,
         shootRound1,
+
         prepPickup2,
         pickup2,
         clearGate,
-        prepReturn2,
         returnShootPos2,
         shootRound2,
+
+        prepPickup3,
+        pickup3,
+        returnShootPos3,
+        shootRound3,
+
         toEndPose
     }
 
@@ -67,29 +73,28 @@ public class ppRedShort extends  LinearOpMode {
 
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(126, 126, Math.toRadians(215));
-    private final Pose shootPos = new Pose(115, 115, Math.toRadians(225));
-
+    private final Pose shootPos = new Pose(111, 111, Math.toRadians(217));
 
     private final Pose prepPickup1 = new Pose(96, 84, Math.toRadians(0));
     private final Pose pickup1 = new Pose(128, 84, Math.toRadians(0));
 
-
     private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
     private final Pose pickup2 = new Pose(128, 60, Math.toRadians(0));
 
+    private final Pose prepPickup3 = new Pose(96, 36, Math.toRadians(0));
+    private final Pose pickup3 = new Pose(128, 36, Math.toRadians(0));
 
-    private final Pose prepReturn2 = new Pose(84, 84, 225);
+    private final Pose mediumShot = new Pose(90, 96, Math.toRadians(215));
 
-
-    private final Pose endPose = new Pose(120, 100, Math.toRadians(270));
-
-
+    private final Pose endPose = new Pose(128, 96, Math.toRadians(270));
 
 
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, clearGate, prep2ToPrepReturn2, returnShootPos2, toEndPos;
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1,
+            shootPosToPrepP2, prepP2ToP2, clearGate, returnShootPos2,
+            shootPosToPrepP3, prepP3ToP3, returnShootPos3, toEndPos;
 
 
     public void buildPaths() {
@@ -134,21 +139,34 @@ public class ppRedShort extends  LinearOpMode {
                 .setLinearHeadingInterpolation(pickup2.getHeading(), prepPickup2.getHeading())
                 .build();
 
-        prep2ToPrepReturn2 = follower.pathBuilder()
-                .addPath(new BezierLine(prepPickup2, prepReturn2))
-                .setLinearHeadingInterpolation(prepPickup2.getHeading(), prepReturn2.getHeading())
-                .build();
-
 
         returnShootPos2 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup2, shootPos))
-                .setLinearHeadingInterpolation(pickup2.getHeading(), shootPos.getHeading())
+                .addPath(new BezierLine(prepPickup2, mediumShot))
+                .setLinearHeadingInterpolation(prepPickup2.getHeading(), mediumShot.getHeading())
                 .build();
+
+        shootPosToPrepP3 = follower.pathBuilder()
+                .addPath(new BezierLine(mediumShot, prepPickup3))
+                .setLinearHeadingInterpolation(mediumShot.getHeading(), prepPickup3.getHeading())
+                .build();
+
+
+        prepP3ToP3 = follower.pathBuilder()
+                .addPath(new BezierLine(prepPickup3, pickup3))
+                .setTangentHeadingInterpolation()
+                .build();
+
+
+        returnShootPos3 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3, mediumShot))
+                .setLinearHeadingInterpolation(pickup3.getHeading(), mediumShot.getHeading())
+                .build();
+
 
 
         toEndPos = follower.pathBuilder()
-                .addPath(new BezierLine(shootPos, endPose))
-                .setLinearHeadingInterpolation(shootPos.getHeading(), endPose.getHeading())
+                .addPath(new BezierLine(mediumShot, endPose))
+                .setLinearHeadingInterpolation(mediumShot.getHeading(), endPose.getHeading())
                 .build();
 
 
@@ -169,15 +187,20 @@ public class ppRedShort extends  LinearOpMode {
 
 
             case startPosToShootPos:
+
+                shootBlock.setPosition(0.5);
+                pivot.setPosition(0.25);
+                shooter1.setVelocity(1450);
+                shooter2.setVelocity(1450);
+
                 follower.followPath(startPosToShootPos, true);
                 pathState = PathState.shootPreload;
-                break;
 
 
 
             case shootPreload:
                 if (!follower.isBusy()) {
-                    shoot();
+                    Shoot();
                     pathState = PathState.prepPickup1;
                 }
 
@@ -209,7 +232,7 @@ public class ppRedShort extends  LinearOpMode {
 
             case shootRound1:
                 if (!follower.isBusy()) {
-                    shoot();
+                    Shoot();
                     pathState = PathState.prepPickup2;
                 }
 
@@ -237,12 +260,6 @@ public class ppRedShort extends  LinearOpMode {
             case clearGate:
                 if (!follower.isBusy()) {
                     follower.followPath(clearGate, true);
-                    pathState = PathState.prepReturn2;
-                }
-
-            case prepReturn2:
-                if (!follower.isBusy()) {
-                    follower.followPath(prep2ToPrepReturn2, true);
                     pathState = PathState.returnShootPos2;
                 }
 
@@ -252,6 +269,12 @@ public class ppRedShort extends  LinearOpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(returnShootPos2, true);
                     intakeMotor.setPower(0);
+
+                    pivot.setPosition(0.5);
+                    shooter1.setVelocity(1650);
+                    shooter2.setVelocity(1650);
+
+
                     pathState = PathState.shootRound2;
                 }
 
@@ -260,7 +283,42 @@ public class ppRedShort extends  LinearOpMode {
 
             case shootRound2:
                 if (!follower.isBusy()) {
-                    shoot();
+                    Shoot();
+                    pathState = PathState.prepPickup3;
+                }
+
+
+
+
+            case prepPickup3:
+                if (!follower.isBusy()) {
+                    follower.followPath(shootPosToPrepP3, true);
+                    intakeMotor.setPower(1);
+                    pathState = PathState.pickup3;
+                }
+
+
+            case pickup3:
+                if (!follower.isBusy()) {
+                    follower.followPath(prepP3ToP3, true);
+                    pathState = PathState.returnShootPos3;
+                }
+
+
+
+            case returnShootPos3:
+                if (!follower.isBusy()) {
+                    follower.followPath(returnShootPos3, true);
+                    intakeMotor.setPower(0);
+                    pathState = PathState.shootRound3;
+                }
+
+
+
+
+            case shootRound3:
+                if (!follower.isBusy()) {
+                    Shoot();
                     pathState = PathState.toEndPose;
                 }
 
@@ -274,26 +332,18 @@ public class ppRedShort extends  LinearOpMode {
         }
     }
 
-
-    public void shoot(){
-
-
-        for (int i = 0; i <=3; i++) {
+    public void Shoot(){
+        for (int i = 0; i <3; i++) {
             shootBlock.setPosition(0);
-
 
             intakeMotor.setPower(1);
             sleep(250);
             intakeMotor.setPower(0);
-            sleep(450);
-
-
-
+            sleep(300);
 
         }
 
         shootBlock.setPosition(0.5);
-
 
     }
 
@@ -317,7 +367,6 @@ public class ppRedShort extends  LinearOpMode {
 
         pivot = hardwareMap.get(Servo.class, "pivot");
         shootBlock = hardwareMap.get(Servo.class, "shootBlock");
-        intakeBlock = hardwareMap.get(Servo.class, "intakeBlock");
 
 
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
@@ -360,11 +409,6 @@ public class ppRedShort extends  LinearOpMode {
 
             telemetry.addData("path state ", pathState.toString());
 
-
-            shootBlock.setPosition(0.5);
-            pivot.setPosition(0.25);
-            shooter1.setVelocity(1300);
-            shooter2.setVelocity(1300);
 
 
 

@@ -20,7 +20,6 @@ public class ppBlueFar extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
-    private Servo intakeBlock;
     private Servo shootBlock;
     private Servo pivot;
 
@@ -223,7 +222,6 @@ public class ppBlueFar extends  LinearOpMode {
 
         pivot = hardwareMap.get(Servo.class, "pivot");
         shootBlock = hardwareMap.get(Servo.class, "shootBlock");
-        intakeBlock = hardwareMap.get(Servo.class, "intakeBlock");
 
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
