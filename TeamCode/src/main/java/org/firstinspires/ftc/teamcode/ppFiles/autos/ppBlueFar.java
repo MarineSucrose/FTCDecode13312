@@ -50,8 +50,8 @@ public class ppBlueFar extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(54, 8, Math.toRadians(270));
-    private final Pose shootPos = new Pose(54, 18, Math.toRadians(294));
+    private final Pose startPos = new Pose(60, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(60, 18, Math.toRadians(294));
 
     private final Pose prepPickup1 = new Pose(48, 35, Math.toRadians(180));
     private final Pose pickup1 = new Pose(2, 35, Math.toRadians(180));
