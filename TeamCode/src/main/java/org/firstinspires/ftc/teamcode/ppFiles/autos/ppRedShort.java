@@ -84,9 +84,9 @@ public class ppRedShort extends  LinearOpMode {
     private final Pose prepPickup3 = new Pose(96, 36, Math.toRadians(0));
     private final Pose pickup3 = new Pose(128, 36, Math.toRadians(0));
 
-    private final Pose mediumShot = new Pose(90, 96, Math.toRadians(215));
+    private final Pose mediumShot = new Pose(84, 92, Math.toRadians(220));
 
-    private final Pose endPose = new Pose(128, 96, Math.toRadians(270));
+    private final Pose endPose = new Pose(128, 92, Math.toRadians(270));
 
 
 
@@ -271,8 +271,8 @@ public class ppRedShort extends  LinearOpMode {
                     intakeMotor.setPower(0);
 
                     pivot.setPosition(0.5);
-                    shooter1.setVelocity(1675);
-                    shooter2.setVelocity(1675);
+                    shooter1.setVelocity(1650);
+                    shooter2.setVelocity(1650);
 
 
                     pathState = PathState.shootRound2;
@@ -339,7 +339,11 @@ public class ppRedShort extends  LinearOpMode {
             intakeMotor.setPower(1);
             sleep(250);
             intakeMotor.setPower(0);
-            sleep(300);
+
+
+            if(i != 3) {
+                sleep(350);
+            }
 
         }
 
