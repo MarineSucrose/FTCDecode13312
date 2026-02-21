@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ppFiles.autos;
 
-
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -13,14 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-
-
-@Autonomous (name="BlueShort", group="Linear OpMode")
-public class ppBlueShort extends  LinearOpMode {
+@Autonomous(name="gateBlueShort12", group="Linear OpMode")
+public class gateBlueShort12 extends  LinearOpMode {
 
 
     private DcMotorEx shooter1, shooter2;
@@ -28,73 +24,59 @@ public class ppBlueShort extends  LinearOpMode {
     private Servo shootBlock;
     private Servo pivot;
 
-
-
-
-
-
     private Follower follower;
     private Timer opmodeTimer;
 
-
-
-
     //these are the different "states" the robot will be in, specific movements and actions
     private enum PathState {
-
-
         startPosToShootPos,
         shootPreload,
 
         prepPickup1,
         pickup1,
+
         returnShootPos1,
-        shootRound1,
+        shootR1,
 
         prepPickup2,
         pickup2,
-        clearGate,
         returnShootPos2,
-        shootRound2,
+        shootR2,
 
         prepPickup3,
         pickup3,
         returnShootPos3,
-        shootRound3,
+        shootR3,
+
+
 
         toEndPose
+
     }
 
 
     PathState pathState;
 
 
-
-
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(19, 124, Math.toRadians(325));
-    private final Pose shootPos = new Pose(28, 115, Math.toRadians(315));
+    private final Pose shootPos = new Pose(60, 90, Math.toRadians(320));
 
-    private final Pose prepPickup1 = new Pose(48, 84, Math.toRadians(180));
-    private final Pose pickup1 = new Pose(16, 84, Math.toRadians(180));
+    private final Pose prepPickup2 = new Pose(48, 84, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(16, 84, Math.toRadians(180));
 
-    private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
-    private final Pose pickup2 = new Pose(16, 60, Math.toRadians(180));
+    private final Pose prepPickup1 = new Pose(48, 66, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(20, 66, Math.toRadians(180));
 
     private final Pose prepPickup3 = new Pose(54, 36, Math.toRadians(180));
     private final Pose pickup3 = new Pose(16, 36, Math.toRadians(180));
-
-    private final Pose mediumShot = new Pose(60, 90, Math.toRadians(320));
 
     private final Pose endPose = new Pose(60, 120, Math.toRadians(270));
 
 
 
-
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1,
-            shootPosToPrepP2, prepP2ToP2, clearGate, returnShootPos2,
-            shootPosToPrepP3, prepP3ToP3, returnShootPos3, toEndPos;
+    private PathChain startPosToShootPos, toPrepP1, toP1, returnShootPos1, toPrepP2, toP2, returnShootPos2, toPrepP3, toP3, returnShootPos3, toEndPos;
 
 
     public void buildPaths() {
@@ -103,75 +85,56 @@ public class ppBlueShort extends  LinearOpMode {
                 .setLinearHeadingInterpolation(startPos.getHeading(), shootPos.getHeading())
                 .build();
 
-
-
-        shootPosToPrepP1 = follower.pathBuilder()
+        toPrepP1 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup1))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup1.getHeading())
                 .build();
 
-
-        prepP1ToP1 = follower.pathBuilder()
+        toP1 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup1, pickup1))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(prepPickup1.getHeading(), pickup1.getHeading())
                 .build();
-
 
         returnShootPos1 = follower.pathBuilder()
                 .addPath(new BezierLine(pickup1, shootPos))
                 .setLinearHeadingInterpolation(pickup1.getHeading(), shootPos.getHeading())
                 .build();
 
-
-        shootPosToPrepP2 = follower.pathBuilder()
+        toPrepP2 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup2))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup2.getHeading())
                 .build();
 
-
-        prepP2ToP2 = follower.pathBuilder()
+        toP2 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup2, pickup2))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(prepPickup2.getHeading(), pickup2.getHeading())
                 .build();
-
-        clearGate = follower.pathBuilder()
-                .addPath(new BezierLine(pickup2, prepPickup2))
-                .setLinearHeadingInterpolation(pickup2.getHeading(), prepPickup2.getHeading())
-                .build();
-
 
         returnShootPos2 = follower.pathBuilder()
-                .addPath(new BezierLine(prepPickup2, mediumShot))
-                .setLinearHeadingInterpolation(prepPickup2.getHeading(), mediumShot.getHeading())
+                .addPath(new BezierLine(pickup2, shootPos))
+                .setLinearHeadingInterpolation(pickup2.getHeading(), shootPos.getHeading())
                 .build();
 
-        shootPosToPrepP3 = follower.pathBuilder()
-                .addPath(new BezierLine(mediumShot, prepPickup3))
-                .setLinearHeadingInterpolation(mediumShot.getHeading(), prepPickup3.getHeading())
+        toPrepP3 = follower.pathBuilder()
+                .addPath(new BezierLine(shootPos, prepPickup3))
+                .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup3.getHeading())
                 .build();
 
-
-        prepP3ToP3 = follower.pathBuilder()
+        toP3 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup3, pickup3))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(prepPickup3.getHeading(), pickup3.getHeading())
                 .build();
-
 
         returnShootPos3 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup3, mediumShot))
-                .setLinearHeadingInterpolation(pickup3.getHeading(), mediumShot.getHeading())
+                .addPath(new BezierLine(pickup3, shootPos))
+                .setLinearHeadingInterpolation(pickup3.getHeading(), shootPos.getHeading())
                 .build();
-
 
 
         toEndPos = follower.pathBuilder()
-                .addPath(new BezierLine(mediumShot, endPose))
-                .setLinearHeadingInterpolation(mediumShot.getHeading(), endPose.getHeading())
+                .addPath(new BezierLine(shootPos, endPose))
+                .setLinearHeadingInterpolation(shootPos.getHeading(), endPose.getHeading())
                 .build();
-
-
-
-
     }
 
 
@@ -181,147 +144,122 @@ public class ppBlueShort extends  LinearOpMode {
 
     //this is what will activate each path and action in a sequence after it is called
 
-
     public void statePathUpdate() {
         switch (pathState) {
 
 
             case startPosToShootPos:
-
-                shootBlock.setPosition(0.5);
-                pivot.setPosition(0.25);
-                shooter1.setVelocity(1350);
-                shooter2.setVelocity(1350);
-
-                follower.followPath(startPosToShootPos, true);
-                pathState = PathState.shootPreload;
-
-
+                if (!follower.isBusy()) {
+                    follower.followPath(startPosToShootPos, true);
+                    pathState = PathState.shootPreload;
+                }
 
             case shootPreload:
                 if (!follower.isBusy()) {
-                    Shoot();
+
+                    shoot();
+
                     pathState = PathState.prepPickup1;
                 }
 
-
             case prepPickup1:
                 if (!follower.isBusy()) {
-                    follower.followPath(shootPosToPrepP1, true);
-                    intakeMotor.setPower(1);
-                    pathState = PathState.pickup1;
-                }
 
+                    intakeMotor.setPower(1);
+
+                    follower.followPath(toPrepP1, true);
+                    pathState = PathState.pickup1;
+
+                }
 
             case pickup1:
                 if (!follower.isBusy()) {
-                    follower.followPath(prepP1ToP1, true);
+                    follower.followPath(toP1, true);
                     pathState = PathState.returnShootPos1;
+
                 }
 
 
             case returnShootPos1:
                 if (!follower.isBusy()) {
                     follower.followPath(returnShootPos1, true);
-                    intakeMotor.setPower(0);
-                    pathState = PathState.shootRound1;
+                    pathState = PathState.shootR1;
+
                 }
 
-
-
-
-            case shootRound1:
+            case shootR1:
                 if (!follower.isBusy()) {
-                    Shoot();
+                    shoot();
                     pathState = PathState.prepPickup2;
                 }
 
-
-
-
-
-
-
-
             case prepPickup2:
                 if (!follower.isBusy()) {
-                    follower.followPath(shootPosToPrepP2, true);
-                    intakeMotor.setPower(1);
-                    pathState = PathState.pickup2;
-                }
 
+                    intakeMotor.setPower(1);
+
+                    follower.followPath(toPrepP2, true);
+                    pathState = PathState.pickup2;
+
+                }
 
             case pickup2:
                 if (!follower.isBusy()) {
-                    follower.followPath(prepP2ToP2, true);
-                    pathState = PathState.clearGate;
-                }
-
-            case clearGate:
-                if (!follower.isBusy()) {
-                    follower.followPath(clearGate, true);
+                    follower.followPath(toP2, true);
                     pathState = PathState.returnShootPos2;
+
                 }
-
-
 
             case returnShootPos2:
                 if (!follower.isBusy()) {
-                    follower.followPath(returnShootPos2, true);
+
                     intakeMotor.setPower(0);
 
-                    pivot.setPosition(0.5);
-                    shooter1.setVelocity(1650);
-                    shooter2.setVelocity(1650);
+                    follower.followPath(returnShootPos2, true);
+                    pathState = PathState.shootR2;
 
-
-                    pathState = PathState.shootRound2;
                 }
 
-
-
-
-            case shootRound2:
+            case shootR2:
                 if (!follower.isBusy()) {
-                    Shoot();
+                    shoot();
                     pathState = PathState.prepPickup3;
                 }
 
 
 
-
             case prepPickup3:
                 if (!follower.isBusy()) {
-                    follower.followPath(shootPosToPrepP3, true);
-                    intakeMotor.setPower(1);
-                    pathState = PathState.pickup3;
-                }
 
+                    intakeMotor.setPower(1);
+
+                    follower.followPath(toPrepP3, true);
+                    pathState = PathState.pickup3;
+
+                }
 
             case pickup3:
                 if (!follower.isBusy()) {
-                    follower.followPath(prepP3ToP3, true);
+                    follower.followPath(toP3, true);
                     pathState = PathState.returnShootPos3;
+
                 }
-
-
 
             case returnShootPos3:
                 if (!follower.isBusy()) {
-                    follower.followPath(returnShootPos3, true);
+
                     intakeMotor.setPower(0);
-                    pathState = PathState.shootRound3;
+
+                    follower.followPath(returnShootPos3, true);
+                    pathState = PathState.shootR3;
+
                 }
 
-
-
-
-            case shootRound3:
+            case shootR3:
                 if (!follower.isBusy()) {
-                    Shoot();
+                    shoot();
                     pathState = PathState.toEndPose;
                 }
-
 
             case toEndPose:
                 if (!follower.isBusy()) {
@@ -332,25 +270,33 @@ public class ppBlueShort extends  LinearOpMode {
         }
     }
 
-    public void Shoot(){
-        for (int i = 0; i <= 3; i++) {
+
+    public void shoot(){
+
+
+        for (int i = 0; i <=3; i++) {
             shootBlock.setPosition(0);
 
+
             intakeMotor.setPower(1);
-            sleep(250);
+            sleep(300);
             intakeMotor.setPower(0);
 
-            if(i != 3) {
-                sleep(350);
+
+            if(i !=3) {
+                sleep(500);
             }
+
+
+
 
         }
 
+
         shootBlock.setPosition(0.5);
 
+
     }
-
-
 
 
 
@@ -362,10 +308,6 @@ public class ppBlueShort extends  LinearOpMode {
         pathState = PathState.startPosToShootPos;
         opmodeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
-
-
-
-
 
 
         pivot = hardwareMap.get(Servo.class, "pivot");
@@ -387,27 +329,23 @@ public class ppBlueShort extends  LinearOpMode {
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooter2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-
-
-
-
-
         buildPaths();
         follower.setPose(startPos);
 
-
-
-
         waitForStart();
-
-
-
 
         while (opModeIsActive()) {
 
 
             follower.update();
             statePathUpdate();
+
+
+            shootBlock.setPosition(0.5);
+            pivot.setPosition(1);
+            shooter1.setVelocity(1650);
+            shooter2.setVelocity(1650);
+
 
 
 

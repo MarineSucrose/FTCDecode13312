@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-@Autonomous (name="ppBlueFar", group="Linear OpMode")
+@Autonomous (name="BlueFar", group="Linear OpMode")
 public class ppBlueFar extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
@@ -194,21 +194,22 @@ public class ppBlueFar extends  LinearOpMode {
         }
     }
 
-    public void shoot(){
+    public void shoot() {
 
-        for (int i = 0; i <=3; i++) {
+        for (int i = 0; i <= 3; i++) {
             shootBlock.setPosition(0);
 
             intakeMotor.setPower(1);
             sleep(300);
             intakeMotor.setPower(0);
-            sleep(500);
 
+            if (i != 3) {
+                sleep(500);
+            }
+
+            shootBlock.setPosition(0.5);
 
         }
-
-        shootBlock.setPosition(0.5);
-
     }
 
 
@@ -235,21 +236,15 @@ public class ppBlueFar extends  LinearOpMode {
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooter2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-
-
         buildPaths();
         follower.setPose(startPos);
 
-
         waitForStart();
-
 
         while (opModeIsActive()) {
 
             follower.update();
             statePathUpdate();
-
-            telemetry.addData("path state ", pathState.toString());
 
             shootBlock.setPosition(0.5);
             pivot.setPosition(1);

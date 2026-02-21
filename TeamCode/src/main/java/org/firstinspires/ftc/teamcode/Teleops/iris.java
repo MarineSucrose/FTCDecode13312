@@ -25,6 +25,7 @@ public class iris extends LinearOpMode {
     private double lowVel = 1300;
     private double curVel = 0;
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
@@ -98,6 +99,12 @@ public class iris extends LinearOpMode {
                 pivot.setPosition(0.75);
             }
 
+            if (gamepad2.dpad_left) {
+                //shoot more forward
+                pivot.setPosition(1);
+            }
+
+
 
             //blocker
 
@@ -118,18 +125,14 @@ public class iris extends LinearOpMode {
 
             if (gamepad2.b) {
                 curVel = highVel;
-                pivot.setPosition(0.5);
             }
 
             if (gamepad2.y) {
                 curVel = mediumVel;
-                pivot.setPosition(0.25);
-
             }
 
             if (gamepad2.a) {
                 curVel = lowVel;
-                pivot.setPosition(0.25);
             }
 
             shooter1.setVelocity(curVel);

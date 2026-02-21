@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
 
-@Autonomous (name="ppRedShort", group="Linear OpMode")
+@Autonomous (name="RedShort", group="Linear OpMode")
 public class ppRedShort extends  LinearOpMode {
 
 
@@ -84,9 +84,9 @@ public class ppRedShort extends  LinearOpMode {
     private final Pose prepPickup3 = new Pose(96, 36, Math.toRadians(0));
     private final Pose pickup3 = new Pose(128, 36, Math.toRadians(0));
 
-    private final Pose mediumShot = new Pose(84, 92, Math.toRadians(220));
+    private final Pose mediumShot = new Pose(84, 90, Math.toRadians(220));
 
-    private final Pose endPose = new Pose(128, 92, Math.toRadians(270));
+    private final Pose endPose = new Pose(84, 120, Math.toRadians(270));
 
 
 
@@ -388,33 +388,16 @@ public class ppRedShort extends  LinearOpMode {
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooter2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-
-
-
-
-
         buildPaths();
         follower.setPose(startPos);
 
-
-
-
         waitForStart();
-
-
-
 
         while (opModeIsActive()) {
 
 
             follower.update();
             statePathUpdate();
-
-
-            telemetry.addData("path state ", pathState.toString());
-
-
-
 
 
         }
