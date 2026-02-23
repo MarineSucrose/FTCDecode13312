@@ -271,8 +271,8 @@ public class ppBlueShort extends  LinearOpMode {
                     intakeMotor.setPower(0);
 
                     pivot.setPosition(0.5);
-                    shooter1.setVelocity(1650);
-                    shooter2.setVelocity(1650);
+                    shooter1.setVelocity(1660);
+                    shooter2.setVelocity(1660);
 
 
                     pathState = PathState.shootRound2;
