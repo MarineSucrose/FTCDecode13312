@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-@Autonomous (name="BlueFar", group="Linear OpMode")
-public class ppBlueFar extends  LinearOpMode {
+@Autonomous (name="RedFar", group="Linear OpMode")
+public class redFar extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
@@ -49,16 +49,16 @@ public class ppBlueFar extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(60, 8, Math.toRadians(270));
-    private final Pose shootPos = new Pose(60, 18, Math.toRadians(294));
+    private final Pose startPos = new Pose(84, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(84, 18, Math.toRadians(246));
 
-    private final Pose prepPickup1 = new Pose(48, 35, Math.toRadians(180));
-    private final Pose pickup1 = new Pose(2, 35, Math.toRadians(180));
+    private final Pose prepPickup1 = new Pose(96, 35, Math.toRadians(0));
+    private final Pose pickup1 = new Pose(142, 35, Math.toRadians(0));
 
-    private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
-    private final Pose pickup2 = new Pose(2, 60, Math.toRadians(180));
+    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
+    private final Pose pickup2 = new Pose(142, 60, Math.toRadians(0));
 
-    private final Pose endPose = new Pose(32, 12, Math.toRadians(90));
+    private final Pose endPose = new Pose(112, 12, Math.toRadians(90));
 
 
     //these are the paths the robot will follow, one pose to another
@@ -152,7 +152,7 @@ public class ppBlueFar extends  LinearOpMode {
 
             case shootRound1:
                 if (!follower.isBusy()) {
-                   shoot();
+                    shoot();
                     pathState = PathState.prepPickup2;
                 }
 
@@ -238,6 +238,7 @@ public class ppBlueFar extends  LinearOpMode {
 
         buildPaths();
         follower.setPose(startPos);
+
 
         waitForStart();
 

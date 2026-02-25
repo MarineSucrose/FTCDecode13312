@@ -15,69 +15,54 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-@Autonomous(name="gateRedShort", group="Linear OpMode")
-public class gateRedShort extends  LinearOpMode {
-
+@Autonomous (name="BlueFar", group="Linear OpMode")
+public class blueFar extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
     private Servo shootBlock;
     private Servo pivot;
 
+
+
     private Follower follower;
     private Timer opmodeTimer;
 
+
     //these are the different "states" the robot will be in, specific movements and actions
     private enum PathState {
+
         startPosToShootPos,
         shootPreload,
-
         prepPickup1,
         pickup1,
-        prepOpenGate,
-        openGate,
-
         returnShootPos1,
-        shootR1,
-
+        shootRound1,
         prepPickup2,
         pickup2,
         returnShootPos2,
-        shootR2,
-
-
-
+        shootRound2,
         toEndPose
-
     }
-
 
     PathState pathState;
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(126, 126, Math.toRadians(215));
-    private final Pose shootPos = new Pose(84, 90, Math.toRadians(220));
+    private final Pose startPos = new Pose(60, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(60, 18, Math.toRadians(294));
 
+    private final Pose prepPickup1 = new Pose(48, 35, Math.toRadians(180));
+    private final Pose pickup1 = new Pose(2, 35, Math.toRadians(180));
 
-    private final Pose prepPickup1 = new Pose(96, 84, Math.toRadians(0));
-    private final Pose pickup1 = new Pose(128, 84, Math.toRadians(0));
+    private final Pose prepPickup2 = new Pose(48, 60, Math.toRadians(180));
+    private final Pose pickup2 = new Pose(2, 60, Math.toRadians(180));
 
-    private final Pose prepPickup2 = new Pose(96, 60, Math.toRadians(0));
-    private final Pose pickup2 = new Pose(128, 60, Math.toRadians(0));
-
-    private final Pose prepPickup3 = new Pose(96, 36, Math.toRadians(0));
-    private final Pose pickup3 = new Pose(128, 36, Math.toRadians(0));
-
-    private final Pose gate = new Pose (20, 70, Math.toRadians(180));
-
-    private final Pose endPose = new Pose(84, 120, Math.toRadians(270));
-
+    private final Pose endPose = new Pose(32, 12, Math.toRadians(90));
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos, toPrepP1, toP1, toPrepGate, toGate, returnShootPos1, toPrepP2, toP2, returnShootPos2, toEndPos;
-
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1, shootPosToPrepP2, prepP2ToP2, returnShootPos2, toEndPos;
 
     public void buildPaths() {
         startPosToShootPos = follower.pathBuilder()
@@ -85,39 +70,30 @@ public class gateRedShort extends  LinearOpMode {
                 .setLinearHeadingInterpolation(startPos.getHeading(), shootPos.getHeading())
                 .build();
 
-        toPrepP1 = follower.pathBuilder()
+
+        shootPosToPrepP1 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup1))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup1.getHeading())
                 .build();
 
-        toP1 = follower.pathBuilder()
+        prepP1ToP1 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup1, pickup1))
-                .setLinearHeadingInterpolation(prepPickup1.getHeading(), pickup1.getHeading())
-                .build();
-
-        toPrepGate = follower.pathBuilder()
-                .addPath(new BezierLine(pickup1, prepPickup1))
-                .setLinearHeadingInterpolation(pickup1.getHeading(), prepPickup1.getHeading())
-                .build();
-
-        toGate = follower.pathBuilder()
-                .addPath(new BezierLine(prepPickup1, gate))
-                .setLinearHeadingInterpolation(prepPickup1.getHeading(), gate.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         returnShootPos1 = follower.pathBuilder()
-                .addPath(new BezierLine(gate, shootPos))
-                .setLinearHeadingInterpolation(gate.getHeading(), shootPos.getHeading())
+                .addPath(new BezierLine(pickup1, shootPos))
+                .setLinearHeadingInterpolation(pickup1.getHeading(), shootPos.getHeading())
                 .build();
 
-        toPrepP2 = follower.pathBuilder()
+        shootPosToPrepP2 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, prepPickup2))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup2.getHeading())
                 .build();
 
-        toP2 = follower.pathBuilder()
+        prepP2ToP2 = follower.pathBuilder()
                 .addPath(new BezierLine(prepPickup2, pickup2))
-                .setLinearHeadingInterpolation(prepPickup2.getHeading(), pickup2.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         returnShootPos2 = follower.pathBuilder()
@@ -125,15 +101,13 @@ public class gateRedShort extends  LinearOpMode {
                 .setLinearHeadingInterpolation(pickup2.getHeading(), shootPos.getHeading())
                 .build();
 
-
         toEndPos = follower.pathBuilder()
                 .addPath(new BezierLine(shootPos, endPose))
                 .setLinearHeadingInterpolation(shootPos.getHeading(), endPose.getHeading())
                 .build();
+
+
     }
-
-
-
 
 
 
@@ -141,7 +115,6 @@ public class gateRedShort extends  LinearOpMode {
 
     public void statePathUpdate() {
         switch (pathState) {
-
 
             case startPosToShootPos:
                 if (!follower.isBusy()) {
@@ -151,87 +124,63 @@ public class gateRedShort extends  LinearOpMode {
 
             case shootPreload:
                 if (!follower.isBusy()) {
-
+                    sleep(1000);
                     shoot();
-
                     pathState = PathState.prepPickup1;
                 }
 
             case prepPickup1:
                 if (!follower.isBusy()) {
-
                     intakeMotor.setPower(1);
-
-                    follower.followPath(toPrepP1, true);
+                    follower.followPath(shootPosToPrepP1, true);
                     pathState = PathState.pickup1;
-
                 }
 
             case pickup1:
                 if (!follower.isBusy()) {
-                    follower.followPath(toP1, true);
-                    pathState = PathState.prepOpenGate;
-
-                }
-
-            case prepOpenGate:
-                if (!follower.isBusy()) {
-
-                    intakeMotor.setPower(0);
-
-                    follower.followPath(toPrepGate, true);
-                    pathState = PathState.openGate;
-
-                }
-
-            case openGate:
-                if (!follower.isBusy()) {
-                    follower.followPath(toGate, false);
+                    follower.followPath(prepP1ToP1, true);
                     pathState = PathState.returnShootPos1;
-
                 }
 
             case returnShootPos1:
                 if (!follower.isBusy()) {
+                    intakeMotor.setPower(0);
                     follower.followPath(returnShootPos1, true);
-                    pathState = PathState.shootR1;
-
+                    pathState = PathState.shootRound1;
                 }
 
-            case shootR1:
+
+            case shootRound1:
                 if (!follower.isBusy()) {
-                    shoot();
+                   shoot();
                     pathState = PathState.prepPickup2;
                 }
 
+
+
+
             case prepPickup2:
                 if (!follower.isBusy()) {
-
                     intakeMotor.setPower(1);
-
-                    follower.followPath(toPrepP2, true);
+                    follower.followPath(shootPosToPrepP2, true);
                     pathState = PathState.pickup2;
-
                 }
 
             case pickup2:
                 if (!follower.isBusy()) {
-                    follower.followPath(toP2, true);
+                    follower.followPath(prepP2ToP2, true);
                     pathState = PathState.returnShootPos2;
-
                 }
 
             case returnShootPos2:
                 if (!follower.isBusy()) {
-
                     intakeMotor.setPower(0);
-
                     follower.followPath(returnShootPos2, true);
-                    pathState = PathState.shootR2;
-
+                    pathState = PathState.shootRound2;
                 }
 
-            case shootR2:
+
+            case shootRound2:
                 if (!follower.isBusy()) {
                     shoot();
                     pathState = PathState.toEndPose;
@@ -242,39 +191,26 @@ public class gateRedShort extends  LinearOpMode {
                     follower.followPath(toEndPos, true);
                 }
 
-
         }
     }
 
+    public void shoot() {
 
-    public void shoot(){
-
-
-        for (int i = 0; i <=3; i++) {
+        for (int i = 0; i <= 3; i++) {
             shootBlock.setPosition(0);
-
 
             intakeMotor.setPower(1);
             sleep(300);
             intakeMotor.setPower(0);
 
-
-            if(i !=3) {
+            if (i != 3) {
                 sleep(500);
             }
 
-
-
+            shootBlock.setPosition(0.5);
 
         }
-
-
-        shootBlock.setPosition(0.5);
-
-
     }
-
-
 
 
 
@@ -285,21 +221,16 @@ public class gateRedShort extends  LinearOpMode {
         opmodeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
 
-
         pivot = hardwareMap.get(Servo.class, "pivot");
         shootBlock = hardwareMap.get(Servo.class, "shootBlock");
-
 
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
 
-
-
         shooter2.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(400, 0, 0, 5);
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -312,22 +243,16 @@ public class gateRedShort extends  LinearOpMode {
 
         while (opModeIsActive()) {
 
-
             follower.update();
             statePathUpdate();
 
-
             shootBlock.setPosition(0.5);
             pivot.setPosition(1);
-            shooter1.setVelocity(1650);
-            shooter2.setVelocity(1650);
-
-
+            shooter1.setVelocity(1975);
+            shooter2.setVelocity(1975);
 
 
         }
 
-
     }
 }
-
