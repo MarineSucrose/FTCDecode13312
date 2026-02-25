@@ -144,7 +144,7 @@ public class redShortV2 extends  LinearOpMode {
 
 
         returnShootPos3 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup3, shootPos))
+                .addPath(new BezierLine(pickup3, finalShotPos))
                 .setLinearHeadingInterpolation(pickup3.getHeading(), finalShotPos.getHeading())
                 .build();
 
