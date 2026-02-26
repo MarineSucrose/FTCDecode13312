@@ -17,8 +17,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-@Autonomous (name="RedShortV2", group="Linear OpMode")
-public class redShortV2 extends  LinearOpMode {
+
+
+@Autonomous (name="RedShort", group="Linear OpMode")
+public class redShort extends  LinearOpMode {
 
 
     private DcMotorEx shooter1, shooter2;
@@ -27,12 +29,19 @@ public class redShortV2 extends  LinearOpMode {
     private Servo pivot;
 
 
+
+
+
+
     private Follower follower;
     private Timer opmodeTimer;
 
 
+
+
     //these are the different "states" the robot will be in, specific movements and actions
     private enum PathState {
+
 
         startPosToShootPos,
         shootPreload,
@@ -51,17 +60,20 @@ public class redShortV2 extends  LinearOpMode {
         prepPickup3,
         pickup3,
         returnShootPos3,
-        shootRound3
+        shootRound3,
 
+        toEndPose
     }
 
 
     PathState pathState;
 
 
+
+
     //all the poses the robot will be in when something happens
     private final Pose startPos = new Pose(126, 126, Math.toRadians(215));
-    private final Pose shootPos = new Pose(84, 90, Math.toRadians(220));
+    private final Pose shootPos = new Pose(115, 115, Math.toRadians(225));
 
     private final Pose prepPickup1 = new Pose(96, 84, Math.toRadians(0));
     private final Pose pickup1 = new Pose(128, 84, Math.toRadians(0));
@@ -72,15 +84,17 @@ public class redShortV2 extends  LinearOpMode {
     private final Pose prepPickup3 = new Pose(96, 36, Math.toRadians(0));
     private final Pose pickup3 = new Pose(128, 36, Math.toRadians(0));
 
-    private final Pose finalShotPos = new Pose(84, 96, Math.toRadians(215));
+    private final Pose mediumShot = new Pose(84, 90, Math.toRadians(220));
+
+    private final Pose endPose = new Pose(84, 120, Math.toRadians(270));
+
 
 
 
     //these are the paths the robot will follow, one pose to another
-    private PathChain startPosToShootPos,
-            shootPosToPrepP1, prepP1ToP1, returnShootPos1,
+    private PathChain startPosToShootPos, shootPosToPrepP1, prepP1ToP1, returnShootPos1,
             shootPosToPrepP2, prepP2ToP2, clearGate, returnShootPos2,
-            shootPosToPrepP3, prepP3ToP3, returnShootPos3;
+            shootPosToPrepP3, prepP3ToP3, returnShootPos3, toEndPos;
 
 
     public void buildPaths() {
@@ -127,13 +141,13 @@ public class redShortV2 extends  LinearOpMode {
 
 
         returnShootPos2 = follower.pathBuilder()
-                .addPath(new BezierLine(prepPickup2, shootPos))
-                .setLinearHeadingInterpolation(prepPickup2.getHeading(), shootPos.getHeading())
+                .addPath(new BezierLine(prepPickup2, mediumShot))
+                .setLinearHeadingInterpolation(prepPickup2.getHeading(), mediumShot.getHeading())
                 .build();
 
         shootPosToPrepP3 = follower.pathBuilder()
-                .addPath(new BezierLine(shootPos, prepPickup3))
-                .setLinearHeadingInterpolation(shootPos.getHeading(), prepPickup3.getHeading())
+                .addPath(new BezierLine(mediumShot, prepPickup3))
+                .setLinearHeadingInterpolation(mediumShot.getHeading(), prepPickup3.getHeading())
                 .build();
 
 
@@ -144,9 +158,18 @@ public class redShortV2 extends  LinearOpMode {
 
 
         returnShootPos3 = follower.pathBuilder()
-                .addPath(new BezierLine(pickup3, finalShotPos))
-                .setLinearHeadingInterpolation(pickup3.getHeading(), finalShotPos.getHeading())
+                .addPath(new BezierLine(pickup3, mediumShot))
+                .setLinearHeadingInterpolation(pickup3.getHeading(), mediumShot.getHeading())
                 .build();
+
+
+
+        toEndPos = follower.pathBuilder()
+                .addPath(new BezierLine(mediumShot, endPose))
+                .setLinearHeadingInterpolation(mediumShot.getHeading(), endPose.getHeading())
+                .build();
+
+
 
 
     }
@@ -156,7 +179,7 @@ public class redShortV2 extends  LinearOpMode {
 
 
 
-    //this is what will activate each path and action in a sequence after it is called
+//this is what will activate each path and action in a sequence after it is called
 
 
     public void statePathUpdate() {
@@ -166,9 +189,9 @@ public class redShortV2 extends  LinearOpMode {
             case startPosToShootPos:
 
                 shootBlock.setPosition(0.5);
-                pivot.setPosition(0.5);
-                shooter1.setVelocity(1660);
-                shooter2.setVelocity(1660);
+                pivot.setPosition(0.25);
+                shooter1.setVelocity(1350);
+                shooter2.setVelocity(1350);
 
                 follower.followPath(startPosToShootPos, true);
                 pathState = PathState.shootPreload;
@@ -247,6 +270,9 @@ public class redShortV2 extends  LinearOpMode {
                     follower.followPath(returnShootPos2, true);
                     intakeMotor.setPower(0);
 
+                    pivot.setPosition(0.5);
+                    shooter1.setVelocity(1660);
+                    shooter2.setVelocity(1660);
 
 
                     pathState = PathState.shootRound2;
@@ -293,6 +319,13 @@ public class redShortV2 extends  LinearOpMode {
             case shootRound3:
                 if (!follower.isBusy()) {
                     Shoot();
+                    pathState = PathState.toEndPose;
+                }
+
+
+            case toEndPose:
+                if (!follower.isBusy()) {
+                    follower.followPath(toEndPos, true);
                 }
 
 
@@ -300,12 +333,13 @@ public class redShortV2 extends  LinearOpMode {
     }
 
     public void Shoot(){
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <=3; i++) {
             shootBlock.setPosition(0);
 
             intakeMotor.setPower(1);
             sleep(250);
             intakeMotor.setPower(0);
+
 
             if(i != 3) {
                 sleep(350);
@@ -354,21 +388,10 @@ public class redShortV2 extends  LinearOpMode {
         shooter1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         shooter2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-
-
-
-
-
         buildPaths();
         follower.setPose(startPos);
 
-
-
-
         waitForStart();
-
-
-
 
         while (opModeIsActive()) {
 
@@ -377,10 +400,8 @@ public class redShortV2 extends  LinearOpMode {
             statePathUpdate();
 
 
-
         }
 
 
     }
 }
-
