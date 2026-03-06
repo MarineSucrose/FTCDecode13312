@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ppFiles.Constants;
 
 
-@Autonomous (name="BlueHP", group="Linear OpMode")
-public class blueHP extends  LinearOpMode {
+@Autonomous (name="RedHP", group="Linear OpMode")
+public class redHP extends  LinearOpMode {
 
     private DcMotorEx shooter1, shooter2;
     private DcMotor intakeMotor;
@@ -54,10 +54,10 @@ public class blueHP extends  LinearOpMode {
 
 
     //all the poses the robot will be in when something happens
-    private final Pose startPos = new Pose(60, 8, Math.toRadians(270));
-    private final Pose shootPos = new Pose(60, 18, Math.toRadians(294));
-    private final Pose humanPlayer = new Pose(0, 10, Math.toRadians(180));
-    private final Pose endPose = new Pose(32, 12, Math.toRadians(90));
+    private final Pose startPos = new Pose(84, 8, Math.toRadians(270));
+    private final Pose shootPos = new Pose(84, 18, Math.toRadians(246));
+    private final Pose humanPlayer = new Pose(144, 10, Math.toRadians(0));
+    private final Pose endPose = new Pose(112, 12, Math.toRadians(90));
 
 
     //these are the paths the robot will follow, one pose to another
